@@ -1,0 +1,17 @@
+
+# Binary files
+*.bin
+*.exe
+*.test
+
+# Log files
+*.log
+
+
+/.idea
+go.sum
+/.vscode
+
+
+
+
