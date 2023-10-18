@@ -2,7 +2,7 @@
 
 Achilles is a minimalist Go web application boilerplate designed to help you start your web projects efficiently and quickly. It comes with built-in features for logging, configuration management, and common web application tasks, allowing you to focus on building your application's core functionality.
 
-## Project Overview
+## Highlights
 
 Achilles simplifies your web application development in several ways:
 
@@ -34,7 +34,7 @@ To begin using Achilles, follow these steps:
    ./main
    ```
 
-## Real Use Cases
+## Use Cases
 
 Here are some real-world scenarios where Achilles can be an excellent fit:
 
@@ -46,16 +46,12 @@ Here are some real-world scenarios where Achilles can be an excellent fit:
 
 - **Faster Development**: Achilles handles common web application tasks and provides a structured starting point, enabling faster development.
 
-## Contribution
-
-We welcome contributions to Achilles! If you'd like to improve the project, report issues, or submit pull requests, please refer to our [Contribution Guidelines](CONTRIBUTING.md).
-
 ## License
 
 Achilles is open-source software distributed under the [MIT License](LICENSE). You're welcome to use, modify, and distribute it in your projects.
 
 ## Acknowledgments
 
-Achilles is built upon several open-source libraries and tools. We want to extend our gratitude to the creators and maintainers of these fantastic projects.
+Achilles is built upon several open-source libraries and tools. Gratitude to the creators and maintainers of these fantastic projects.
 
-We appreciate your interest in Achilles and hope it accelerates your Go web application development.
+I appreciate your interest in Achilles and hope it accelerates your Go web application development.
