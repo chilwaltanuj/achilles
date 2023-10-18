@@ -37,7 +37,7 @@ func createLogger(logConfig model.LogConfig) *logrus.Logger {
 
 // getLumberjackWriter creates a Lumberjack writer based on LogConfig.
 func getLumberjackWriter(logConfig *model.LogConfig) io.Writer {
-	logFilePath := fmt.Sprintf("logs/%s-%s.log", logConfig.LogFilePath, time.Now().Format("20060102"))
+	logFilePath := fmt.Sprintf("%s%s.log", logConfig.LogFilePath, time.Now().Format("20060102"))
 
 	return &lumberjack.Logger{
 		Filename:   logFilePath,
@@ -52,24 +52,29 @@ type DevErrLogFormatter struct{}
 
 // Format renders a single log entry.
 func (f *DevErrLogFormatter) Format(entry *logrus.Entry) ([]byte, error) {
-	data := make(logrus.Fields, len(entry.Data)+3)
-	for k, v := range entry.Data {
-		switch v := v.(type) {
-		case error:
-			// Serialize errors as strings to include them in JSON
-			data[k] = v.Error()
-		default:
-			data[k] = v
-		}
-	}
+	data := formatFields(entry)
 	data["time"] = entry.Time.Format("2006/01/02 - 15:04:05")
 	data["level"] = entry.Level.String()
 	data["msg"] = entry.Message
-	prefix := []byte("")
+
 	serialized, err := json.MarshalIndent(data, "  ", "  ")
 	if err != nil {
 		return nil, fmt.Errorf("Failed to marshal fields to JSON, %v", err)
 	}
 
-	return append(append(prefix, serialized...), '\n'), nil
+	//return serialized, nil
+	return append(serialized, '\n'), nil
+}
+
+func formatFields(entry *logrus.Entry) logrus.Fields {
+	data := make(logrus.Fields, len(entry.Data)+3)
+	for key, value := range entry.Data {
+		switch v := value.(type) {
+		case error:
+			data[key] = v.Error()
+		default:
+			data[key] = v
+		}
+	}
+	return data
 }

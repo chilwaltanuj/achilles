@@ -26,11 +26,15 @@ func main() {
 	initiateAndBuildServer(container)
 }
 
-func BuildAndGetDependencyContainer() *model.DependencyContainer {
+func BuildAndGetDependencyContainer() (*model.DependencyContainer, error) {
 	dependency := model.DependencyContainer{}
-	dependency.ApplicationConfiguration, _ = config.BuildAndGetApplicationConfiguration()
+	var err error
+	if dependency.ApplicationConfiguration, err = config.BuildAndGetApplicationConfiguration(); err != nil {
+		return nil, err
+	}
 	dependency.LogWriter = client.BuildAndGetLogWriter(dependency.ApplicationConfiguration.Log)
-	return &dependency
+
+	return &dependency, nil
 }
 
 func initiateAndBuildServer(container *dig.Container) {

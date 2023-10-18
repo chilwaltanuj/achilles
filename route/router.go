@@ -1,8 +1,7 @@
 package route
 
 import (
-	"fmt"
-
+	"achilles/helper"
 	v1RouteHandler "achilles/route/v1_route_handler"
 
 	"github.com/gin-gonic/gin"
@@ -14,7 +13,7 @@ func SetupRouter(container *dig.Container) (*gin.Engine, error) {
 	var router *gin.Engine
 	router = gin.New()
 	if err := container.Invoke(v1RouteHandler.Init); err != nil {
-		fmt.Println(err)
+		helper.InvokeAndLog(container, helper.LogInformation(err.Error()))
 	}
 	v1RouteHandler.AddRouteHandlers(router)
 

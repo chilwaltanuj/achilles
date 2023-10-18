@@ -12,9 +12,7 @@ func BuildAndGetApplicationConfiguration() (*model.ApplicationConfiguration, err
 	gin.SetMode(gin.DebugMode)
 
 	// Initialize Viper
-	viper.SetConfigName("config")   // Set the name of the configuration file (without extension)
-	viper.SetConfigType("json")     // Set the configuration file type
-	viper.AddConfigPath("./config") // Add the path to the config directory
+	viper.SetConfigFile("./config/config.json")
 
 	if err := viper.ReadInConfig(); err != nil {
 		return nil, fmt.Errorf("error reading config file: %s", err)
