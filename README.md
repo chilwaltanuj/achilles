@@ -1,6 +1,11 @@
 # Achilles: A Minimalist Go Web Application Boilerplate
 
-Achilles is a minimalist Go web application boilerplate designed to help you start your web projects efficiently and quickly. It comes with built-in features for logging, configuration management, and common web application tasks, allowing you to focus on building your application's core functionality.
+Achilles is a lean, Go-based web application boilerplate crafted to streamline the initiation of your web projects. With built-in capabilities for logging, configuration management, and common web application tasks, Achilles frees you from mundane and essential chores, enabling you to channel your efforts into developing your application's core functionality efficiently.
+
+### Disclaimer: Deviation from Go Standard Naming Conventions
+
+Achilles follows a clear and streamlined naming structure specifically designed for the sake of clarity and minimalism. We acknowledge that the Go community values adherence to the standard Go packaging conventions, and Achilles intentionally deviates from these standards for a more intuitive and straightforward approach to structuring your code.
+
 
 ## Highlights
 
@@ -8,7 +13,8 @@ Achilles simplifies your web application development in several ways:
 
 - **Intuitive Structuring**: If you appreciate clear and straightforward naming conventions, Achilles might be your perfect choice. Say goodbye to ambiguous structuring; It places everything right where it belongs.
 
-- **Quick Proof of Concept (POC)**: Whether you're exploring Go for a specific use case or need a scalable POC with zero effort, Achilles has you covered.
+- **Rapid Proof of Concept (POC)** : Whether you're exploring Go for a specific use case or demand an effortlessly scalable proof of concept, Achilles is your reliable companion.
+
 
 - **Structured Logging**: Harness the flexibility of Logrus for logging, delivering structured JSON output. With log rotation based on file size and days handled through Lumberjack, your log management becomes more efficient.
 
@@ -19,7 +25,7 @@ Achilles simplifies your web application development in several ways:
 
 ## Getting Started
 
-To begin using Achilles, follow these steps:
+To initiate your journey with Achilles, follow these fundamental steps:
 
 1. **Clone this Repository**: Start by cloning this repository to your local machine.
 
@@ -38,13 +44,13 @@ To begin using Achilles, follow these steps:
 
 Here are some real-world scenarios where Achilles can be an excellent fit:
 
-- **Quick Prototyping**: Use Achilles to create quick prototypes of web applications or microservices with minimal overhead.
+- **Swift Prototyping**: Utilize Achilles to expedite the creation of web application prototypes or microservices with minimal overhead.
 
-- **Simplified Development**: Developers who appreciate straightforward structuring and clear naming conventions will find Achilles a breath of fresh air.
+- **Streamlined Development**: Developers who appreciate straightforward structuring and clear naming conventions will find Achilles a breath of fresh air.
 
 - **Customization**: Easily customize your application's behavior by tweaking the `config.json` file in the `config` directory.
 
-- **Faster Development**: Achilles handles common web application tasks and provides a structured starting point, enabling faster development.
+- **Accelerated Development**: Achilles simplifies the handling of common web application tasks and provides a well-structured foundation, facilitating swift development.
 
 ## License
 
