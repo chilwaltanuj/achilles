@@ -34,7 +34,7 @@ func Recovery() gin.HandlerFunc {
 
 // RecoveryMiddleware is the core recovery middleware function.
 func RecoveryMiddleware() gin.HandlerFunc {
-	return func(c *gin.Context) {
+	return func(ginContext *gin.Context) {
 		defer func() {
 			if r := recover(); r != nil {
 				stack := getStack(recoveryStackSkip)
@@ -45,12 +45,12 @@ func RecoveryMiddleware() gin.HandlerFunc {
 					Status:  defaultHTTPStatus,
 					Message: errorMessage,
 				}
-				routeHelper.BuildAndSetHttpResponseInContext(c, responseData)
-				routeHelper.UpdateRequestMetaDataInContext(c)
-				routeHelper.RenderJsonResponse(c)
+				routeHelper.BuildAndSetHttpResponseInContext(ginContext, responseData)
+				routeHelper.UpdateRequestMetaDataInContext(ginContext)
+				routeHelper.RenderJsonResponse(ginContext)
 			}
 		}()
-		c.Next()
+		ginContext.Next()
 	}
 }
 

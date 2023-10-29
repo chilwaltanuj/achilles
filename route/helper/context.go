@@ -72,6 +72,7 @@ func BuildAndSetRequestMetaInContext(ctx *gin.Context) model.RequestMetaData {
 		StartEpoch: helper.GetUnixTimeInNanoSecond(),
 	}
 	ctx.Set(constant.ContextRequestMetaData, requestMeta)
+	helper.GetGlobalLogger().Info(requestMeta)
 
 	return requestMeta
 }

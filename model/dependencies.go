@@ -2,7 +2,7 @@ package model
 
 import "github.com/sirupsen/logrus"
 
-type DependencyContainer struct { // DependencyConatiner
+type ApplicationDependencies struct {
 	ApplicationConfiguration *ApplicationConfiguration
 
 	LogWriter *logrus.Logger

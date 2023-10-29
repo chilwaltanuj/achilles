@@ -3,6 +3,7 @@
 *.bin
 *.exe
 *.test
+*.text
 
 # Log files
 *.log

@@ -1,8 +1,8 @@
 package main
 
 import (
-	"achilles/client"
 	"achilles/config"
+	"achilles/helper"
 	"achilles/model"
 	"achilles/route"
 	"fmt"
@@ -10,43 +10,42 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
-
-	"go.uber.org/dig"
 )
 
 func main() {
-
-	var container = dig.New()
-	if err := container.Provide(BuildAndGetDependencyContainer); err != nil {
-		fmt.Printf("Failed to provide ApplicationDependencies: %s\n", err)
-		fmt.Printf("waah" + err.Error())
+	configuration, err := config.BuildAndGetApplicationConfiguration()
+	if err != nil {
+		fmt.Printf("Failed to load configuration, Reason being = %v ", err)
 		return
 	}
-	//BuildAndGetDependencyContainer()
-	initiateAndBuildServer(container)
+
+	helper.BuildDependencies(configuration)
+	//container := BuildAndGetDependencyContainer(configuration)
+	initiateAndBuildServer(configuration)
 }
 
-func BuildAndGetDependencyContainer() (*model.DependencyContainer, error) {
-	dependency := model.DependencyContainer{}
-	var err error
-	if dependency.ApplicationConfiguration, err = config.BuildAndGetApplicationConfiguration(); err != nil {
-		return nil, err
-	}
-	dependency.LogWriter = client.BuildAndGetLogWriter(dependency.ApplicationConfiguration.Log)
+// func BuildAndGetDependencyContainer(configuration *model.ApplicationConfiguration) *dig.Container {
+// 	var container = dig.New()
 
-	return &dependency, nil
-}
+// 	container.Provide(func() *model.ApplicationConfiguration {
+// 		return configuration
+// 	})
+// 	// container.Provide(func() *logrus.Logger {
+// 	// 	return client.BuildAndGetLogWriter(configuration.Log)
+// 	// })
+// 	return container
+// }
 
-func initiateAndBuildServer(container *dig.Container) {
-	router, _ := route.SetupRouter(container)
+func initiateAndBuildServer(configuration *model.ApplicationConfiguration) {
+	router, _ := route.SetupRouter()
 
 	server := &http.Server{
-		Addr:    fmt.Sprintf(":%d", 8080),
+		Addr:    fmt.Sprintf(":%d", configuration.HttpPort),
 		Handler: router,
 	}
 
 	if err := startServer(server); err != nil {
-		fmt.Printf("Failed to start server: %s\n", err)
+		helper.GetGlobalLogger().Fatal("Failed to start server. Reason Being" + err.Error())
 	} else {
 		gracefulShutdownOnClosureSignals(server)
 	}

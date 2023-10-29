@@ -1,14 +1,14 @@
 package v1RouteHandler
 
 import (
+	"achilles/helper"
 	routeHelper "achilles/route/helper"
 
 	"github.com/gin-gonic/gin"
-	"github.com/sirupsen/logrus"
 )
 
 func Success(ginContext *gin.Context) {
-	logrus.Infof("wow! invoked")
+	helper.GetGlobalLogger().Info("Request Received")
 
-	routeHelper.SetSuccessResponseWithOnlyMessage(ginContext, "What is happening")
+	routeHelper.SetSuccessResponseWithOnlyMessage(ginContext, "Fairy God mother has Granted your wish!")
 }
