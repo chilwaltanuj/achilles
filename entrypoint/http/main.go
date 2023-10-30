@@ -15,26 +15,13 @@ import (
 func main() {
 	configuration, err := config.BuildAndGetApplicationConfiguration()
 	if err != nil {
-		fmt.Printf("Failed to load configuration, Reason being = %v ", err)
+		fmt.Printf("Failed to load configuration. Reason being -> %v ", err)
 		return
 	}
 
 	helper.BuildDependencies(configuration)
-	//container := BuildAndGetDependencyContainer(configuration)
 	initiateAndBuildServer(configuration)
 }
-
-// func BuildAndGetDependencyContainer(configuration *model.ApplicationConfiguration) *dig.Container {
-// 	var container = dig.New()
-
-// 	container.Provide(func() *model.ApplicationConfiguration {
-// 		return configuration
-// 	})
-// 	// container.Provide(func() *logrus.Logger {
-// 	// 	return client.BuildAndGetLogWriter(configuration.Log)
-// 	// })
-// 	return container
-// }
 
 func initiateAndBuildServer(configuration *model.ApplicationConfiguration) {
 	router, _ := route.SetupRouter()
@@ -71,10 +58,9 @@ func gracefulShutdownOnClosureSignals(server *http.Server) {
 	// Wait for a signal to be received
 	sig := <-signalChannel
 
-	fmt.Printf("Received signal: %v\n", sig)
-	fmt.Println("I cannot believe you canceled on me! :( Achilles sad ")
+	fmt.Printf("\n Received signal: %v.  I cannot believe you canceled on me! :( Achilles sad ", sig)
 
 	if err := server.Shutdown(nil); err != nil {
-		fmt.Printf("Failed to gracefully shutdown server: %s\n", err)
+		fmt.Printf("Failed to gracefully shutdown server: %s", err)
 	}
 }
