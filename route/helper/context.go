@@ -10,6 +10,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"github.com/sirupsen/logrus"
 )
 
 func RenderJsonResponse(ginContext *gin.Context) {
@@ -72,8 +73,8 @@ func BuildAndSetRequestMetaInContext(ctx *gin.Context) model.RequestMetaData {
 		StartEpoch: helper.GetUnixTimeInNanoSecond(),
 	}
 	ctx.Set(constant.ContextRequestMetaData, requestMeta)
-	helper.GetGlobalLogger().Info(requestMeta)
-
+	//helper.GetGlobalLogger().Info(requestMeta)
+	helper.LogDetails(logrus.InfoLevel, "Request received", requestMeta)
 	return requestMeta
 }
 

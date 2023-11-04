@@ -1,6 +1,7 @@
 package helper
 
 import (
+	"achilles/constant"
 	"achilles/model"
 
 	"github.com/sirupsen/logrus"
@@ -8,9 +9,13 @@ import (
 )
 
 var globalLogger *logrus.Logger
-var container *dig.Container
+var globalContainer *dig.Container
+var globalConfiguration *model.ApplicationConfiguration
 
-func BuildDependencies(configuration *model.ApplicationConfiguration) {
-	initializeLogger(configuration.Log)
-	initializeDependecies(configuration)
+func BuildDependencies(appConfiguration *model.ApplicationConfiguration) {
+	globalConfiguration = appConfiguration
+	globalLogger = buildAndGetLogger(appConfiguration.Log)
+	initializeDependecies(appConfiguration)
+
+	LogDetails(logrus.InfoLevel, constant.DependenciesLoaded, *globalConfiguration)
 }

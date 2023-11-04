@@ -2,6 +2,7 @@ package main
 
 import (
 	"achilles/config"
+	"achilles/constant"
 	"achilles/helper"
 	"achilles/model"
 	"achilles/route"
@@ -10,20 +11,22 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+
+	"github.com/sirupsen/logrus"
 )
 
 func main() {
 	configuration, err := config.BuildAndGetApplicationConfiguration()
 	if err != nil {
-		fmt.Printf("Failed to load configuration. Reason being -> %v ", err)
+		fmt.Print(constant.FailedServerStart, err)
 		return
 	}
 
 	helper.BuildDependencies(configuration)
-	initiateAndBuildServer(configuration)
+	BuildServer(configuration)
 }
 
-func initiateAndBuildServer(configuration *model.ApplicationConfiguration) {
+func BuildServer(configuration *model.ApplicationConfiguration) {
 	router, _ := route.SetupRouter()
 
 	server := &http.Server{
@@ -32,7 +35,7 @@ func initiateAndBuildServer(configuration *model.ApplicationConfiguration) {
 	}
 
 	if err := startServer(server); err != nil {
-		helper.GetGlobalLogger().Fatal("Failed to start server. Reason Being" + err.Error())
+		helper.LogDetails(logrus.FatalLevel, constant.FailedServerStart, err)
 	} else {
 		gracefulShutdownOnClosureSignals(server)
 	}
@@ -42,7 +45,7 @@ func initiateAndBuildServer(configuration *model.ApplicationConfiguration) {
 func startServer(server *http.Server) error {
 	go func() {
 		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			fmt.Printf("Failed to start server: %s\n", err)
+			helper.LogDetails(logrus.FatalLevel, constant.FailedServerStart, err)
 		}
 	}()
 
@@ -54,13 +57,12 @@ func startServer(server *http.Server) error {
 func gracefulShutdownOnClosureSignals(server *http.Server) {
 	signalChannel := make(chan os.Signal, 1)
 	signal.Notify(signalChannel, syscall.SIGINT, syscall.SIGTERM)
-
-	// Wait for a signal to be received
 	sig := <-signalChannel
 
-	fmt.Printf("\n Received signal: %v.  I cannot believe you canceled on me! :( Achilles sad ", sig)
+	message := fmt.Sprintf(constant.ServerShutdownRequest, sig)
+	helper.LogDetails(logrus.FatalLevel, message, "")
 
 	if err := server.Shutdown(nil); err != nil {
-		fmt.Printf("Failed to gracefully shutdown server: %s", err)
+		helper.LogDetails(logrus.ErrorLevel, constant.GracefulShutdownError, err)
 	}
 }

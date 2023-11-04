@@ -3,11 +3,11 @@
   "application_id": 1,
   "http_port": 8080,
   "log": {
-    "redirect_log_File_to_terminal": true,
+    "log_in_terminal_over_file": false,
+    "enable_indentation": true,
     "log_path": "log/",
     "log_max_size_mb": 10,
     "log_max_backups": 5,
-    "log_max_age_days": 28,
-    "enable_daywise_log": true
+    "log_max_age_days": 28
   }
 }

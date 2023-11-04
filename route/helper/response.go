@@ -11,7 +11,7 @@ func SetSuccessResponse(ginContext *gin.Context, data model.ResponseData) {
 	responseData := model.HttpResponseData{
 		Success:      true,
 		Status:       200,
-		Message:      constant.MessageSuccess,
+		Message:      constant.HttpSuccess,
 		ResponseData: data,
 	}
 	BuildAndSetHttpResponseInContext(ginContext, responseData)

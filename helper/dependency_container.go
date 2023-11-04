@@ -8,17 +8,17 @@ import (
 )
 
 func initializeDependecies(configuration *model.ApplicationConfiguration) {
-	container = dig.New()
+	globalContainer = dig.New()
 
-	container.Provide(func() *model.ApplicationConfiguration {
+	globalContainer.Provide(func() *model.ApplicationConfiguration {
 		return configuration
 	})
-	container.Provide(func() *logrus.Logger {
+	globalContainer.Provide(func() *logrus.Logger {
 		return globalLogger
 	})
 }
 
 // GetGlobalDependencyContainer returns the globally container.
 func GetGlobalDependencyContainer() *dig.Container {
-	return container
+	return globalContainer
 }

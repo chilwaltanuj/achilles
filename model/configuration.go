@@ -10,7 +10,8 @@ type ApplicationConfiguration struct {
 
 // LogConfig represents the log configuration.
 type LogConfig struct {
-	RedirectLogFileToTerminal bool `mapstructure:"redirect_log_File_to_terminal"`
+	LogInTerminalOverFile bool `mapstructure:"log_in_terminal_over_file"`
+	EnableIndentation     bool `mapstructure:"enable_indentation"`
 
 	LogFilePath   string `mapstructure:"log_path"`
 	LogMaxSizeMB  int    `mapstructure:"log_max_size_mb"`
