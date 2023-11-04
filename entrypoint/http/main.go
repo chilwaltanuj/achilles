@@ -18,7 +18,7 @@ import (
 func main() {
 	configuration, err := config.BuildAndGetApplicationConfiguration()
 	if err != nil {
-		fmt.Print(constant.FailedServerStart, err)
+		fmt.Print(constant.ServerStartFailure, err)
 		return
 	}
 
@@ -27,29 +27,26 @@ func main() {
 }
 
 func BuildServer(configuration *model.ApplicationConfiguration) {
-	router, _ := route.SetupRouter()
+	server := getServer(configuration)
+	go startServer(server)
+	gracefulShutdownOnClosureSignals(server)
+}
 
-	server := &http.Server{
-		Addr:    fmt.Sprintf(":%d", configuration.HttpPort),
-		Handler: router,
-	}
-
-	if err := startServer(server); err != nil {
-		helper.LogDetails(logrus.FatalLevel, constant.FailedServerStart, err)
-	} else {
-		gracefulShutdownOnClosureSignals(server)
+func startServer(server *http.Server) {
+	err := server.ListenAndServe()
+	if err != nil && err != http.ErrServerClosed {
+		helper.LogDetails(logrus.FatalLevel, constant.ServerStartFailure, err)
+		os.Exit(1)
 	}
 }
 
-// StartServer starts the HTTP server in a goroutine.
-func startServer(server *http.Server) error {
-	go func() {
-		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			helper.LogDetails(logrus.FatalLevel, constant.FailedServerStart, err)
-		}
-	}()
+func getServer(configuration *model.ApplicationConfiguration) *http.Server {
+	router, _ := route.SetupRouter()
 
-	return nil
+	return &http.Server{
+		Addr:    fmt.Sprintf(":%d", configuration.HttpPort),
+		Handler: router,
+	}
 }
 
 // gracefulShutdownOnClosureSignals listens to user-initiated closure (Ctrl+C) and process kill (pkill processID)
@@ -64,5 +61,7 @@ func gracefulShutdownOnClosureSignals(server *http.Server) {
 
 	if err := server.Shutdown(nil); err != nil {
 		helper.LogDetails(logrus.ErrorLevel, constant.GracefulShutdownError, err)
+	} else {
+		helper.LogDetails(logrus.InfoLevel, constant.GracefulShutdownSuccess, nil)
 	}
 }

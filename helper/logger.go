@@ -91,6 +91,9 @@ func formatFields(entry *logrus.Entry) logrus.Fields {
 
 // LogStructFields logs the fields of a struct in a Logrus entry.
 func LogStructFields(entry *logrus.Entry, data interface{}) *logrus.Entry {
+	if err, ok := data.(error); ok {
+		return entry.WithField("error", err.Error())
+	}
 	value := reflect.ValueOf(data)
 	if value.Kind() == reflect.Struct {
 		fields := logrus.Fields{}
