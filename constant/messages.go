@@ -1,15 +1,14 @@
 package constant
 
 const (
-	HttpSuccess = "Gods are with you.Your request is fulfilled."
+	HttpSuccess = "Your request has been granted!"
 
-	DependenciesLoaded = "configuration loaded , logger built and so are the dependencies"
+	DependenciesLoaded = "Configuration loaded, logger built, and dependencies summoned to action. We're ready!"
 
-	ServerStartFailure = "Failed to start server"
-	ServerStartSuccess = "Failed to start server"
+	ServerStartFailure    = "Oops, Achilles stumbled. Failed to unleash the server."
+	ServerStartSuccess    = "Achilles, the server, is unleashed, armed with code mightier than the sword."
+	ServerShutdownRequest = "\n Signal received: %v. Achilles bids farewell,but the server's legend lives on."
 
-	ServerShutdownRequest = "\n Received signal: %v.  I cannot believe you canceled on me! :( Achilles sad "
-
-	GracefulShutdownError   = "Unable to shutdown server gracefully"
-	GracefulShutdownSuccess = "Server shut down successfully."
+	GracefulShutdownError   = "Achilles's shield has a crack! Graceful retreat is not an option."
+	GracefulShutdownSuccess = "With valor, Achilles lays down his sword. Server rests in peace."
 )
