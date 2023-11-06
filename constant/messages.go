@@ -11,4 +11,6 @@ const (
 
 	GracefulShutdownError   = "Achilles's shield has a crack! Graceful retreat is not an option."
 	GracefulShutdownSuccess = "With valor, Achilles lays down his sword. Server rests in peace."
+
+	PanicRecovery = "Oh no, the gods of Olympus have intervened (500). But fear not, for Achilles, the mightiest of warriors, swiftly turned this into a glorious victory (200)."
 )

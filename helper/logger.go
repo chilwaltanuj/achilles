@@ -8,6 +8,7 @@ import (
 	"io"
 	"os"
 	"reflect"
+	"runtime/debug"
 	"time"
 
 	"github.com/sirupsen/logrus"
@@ -19,6 +20,10 @@ func LogDetails(logLevel logrus.Level, message string, dataToLog interface{}) {
 	entry := globalLogger.WithFields(logrus.Fields{})
 	entry = LogStructFields(entry, dataToLog)
 	entry.Log(logLevel, message)
+}
+
+func LogPanic(errorMessage string) {
+	LogDetails(logrus.ErrorLevel, errorMessage, string(debug.Stack()))
 }
 
 // createLogger creates and configures a new logrus logger.
@@ -93,6 +98,8 @@ func formatFields(entry *logrus.Entry) logrus.Fields {
 func LogStructFields(entry *logrus.Entry, data interface{}) *logrus.Entry {
 	if err, ok := data.(error); ok {
 		return entry.WithField("error", err.Error())
+	} else if _, ok := data.(string); ok {
+		return entry.WithField("text", data)
 	}
 	value := reflect.ValueOf(data)
 	if value.Kind() == reflect.Struct {
