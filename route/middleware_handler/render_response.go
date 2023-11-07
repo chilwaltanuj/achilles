@@ -23,5 +23,5 @@ func RenderResponse(gincontext *gin.Context) {
 		gincontext.JSON(response.Status, response)
 	}
 
-	helper.LogDetails(logrus.InfoLevel, "Response rendered", response)
+	helper.LogDetails(logrus.InfoLevel, constant.RenderResponseMessage, response)
 }

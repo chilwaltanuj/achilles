@@ -7,4 +7,7 @@ const (
 	Value   = "value"
 
 	TimeFormat = "2006/01/02 - 15:04:05"
+
+	RenderResponseMessage  = "middlewareHandler.RenderResponse executed and response rendered"
+	RequestReceivedMessage = "route.helper.BuildAndSetRequestMetaInContext executed and requestlogged"
 )

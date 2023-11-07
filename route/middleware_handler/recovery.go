@@ -37,6 +37,6 @@ func handlePanic(ginContext *gin.Context) {
 		routeHelper.RenderJsonResponse(ginContext)
 
 		errorMessage := fmt.Sprintf("%+v", r)
-		helper.LogPanic(errorMessage)
+		helper.LogMessageWithStackTrace(errorMessage)
 	}
 }

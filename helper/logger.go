@@ -22,7 +22,7 @@ func LogDetails(logLevel logrus.Level, message string, dataToLog interface{}) {
 	entry.Log(logLevel, message)
 }
 
-func LogPanic(errorMessage string) {
+func LogMessageWithStackTrace(errorMessage string) {
 	LogDetails(logrus.ErrorLevel, errorMessage, string(debug.Stack()))
 }
 
