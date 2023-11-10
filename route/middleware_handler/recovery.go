@@ -27,16 +27,17 @@ func RecoveryMiddleware() gin.HandlerFunc {
 
 func handlePanic(ginContext *gin.Context) {
 	if r := recover(); r != nil {
+
 		responseData := model.HttpResponseData{
 			Success: false,
 			Status:  http.StatusOK,
-			Message: constant.PanicRecovery,
+			Message: constant.HttpServerErrorPanic,
 		}
 		routeHelper.BuildAndSetHttpResponseInContext(ginContext, responseData)
 		routeHelper.UpdateRequestMetaDataInContext(ginContext)
-		routeHelper.RenderJsonResponse(ginContext)
 
 		errorMessage := fmt.Sprintf("%+v", r)
 		helper.LogMessageWithStackTrace(errorMessage)
+		RenderResponse(ginContext)
 	}
 }

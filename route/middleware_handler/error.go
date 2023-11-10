@@ -1,19 +1,20 @@
 package middlewareHandler
 
 import (
+	"achilles/constant"
 	routeHelper "achilles/route/helper"
 
 	"github.com/gin-gonic/gin"
 )
 
 func MethodNotSupported() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		routeHelper.SetSuccessResponseWithOnlyMessage(c, "check the method used. Not supported")
-		routeHelper.RenderJsonResponse(c)
+	return func(gincontext *gin.Context) {
+		routeHelper.SetSuccessResponseWithOnlyMessage(gincontext, constant.HttpMethodNotSUpported)
+		RenderResponse(gincontext)
 	}
 }
 
-func RouteNotSupported(c *gin.Context) {
-	routeHelper.SetSuccessResponseWithOnlyMessage(c, "check the resource path")
-	routeHelper.RenderJsonResponse(c)
+func RouteNotSupported(gincontext *gin.Context) {
+	routeHelper.SetSuccessResponseWithOnlyMessage(gincontext, constant.HttpRouteNotFound)
+	RenderResponse(gincontext)
 }

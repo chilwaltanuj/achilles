@@ -13,11 +13,6 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func RenderJsonResponse(ginContext *gin.Context) {
-	response := GetHttpReponseFromContext(ginContext)
-	ginContext.JSON(response.Status, response)
-}
-
 func UpdateRequestMetaDataInContext(ginContext *gin.Context) {
 	requestMetaData := GetRequestMetadataFromContext(ginContext)
 	requestMetaData.LatencyInNanoSecond = helper.GetUnixTimeInNanoSecond() - requestMetaData.StartEpoch
@@ -48,29 +43,31 @@ func SetHttpReponseInContext(ginContext *gin.Context, response model.HttpRespons
 }
 
 // GetRequestMetadata retrieves the request metadata from the Gin context.
-func GetRequestMetadataFromContext(c *gin.Context) model.RequestMetaData {
-	data, exists := c.Get(constant.ContextRequestMetaData)
-	if !exists {
-		return BuildAndSetRequestMetaInContext(c)
+func GetRequestMetadataFromContext(ginContext *gin.Context) model.RequestMetaData {
+	data, exists := ginContext.Get(constant.ContextRequestMetaData)
+	if !exists { //request received for the first time. build it first and then return it
+		return BuildAndSetRequestMetaInContext(ginContext)
 	}
 	if requestMeta, ok := data.(model.RequestMetaData); ok {
 		return requestMeta
 	}
-	return BuildAndSetRequestMetaInContext(c)
+	return BuildAndSetRequestMetaInContext(ginContext)
 }
 
 func BuildAndSetRequestMetaInContext(ctx *gin.Context) model.RequestMetaData {
 	request := ctx.Request
 
 	requestMeta := model.RequestMetaData{
-		ID:         getRequestID(),
-		StatusCode: ctx.Writer.Status(),
-		UserAgent:  request.UserAgent(),
-		HttpMethod: request.Method,
-		URL:        getCompleteURLFromRequest(request),
-		Query:      request.URL.Query(),
-		IP:         request.RemoteAddr,
-		StartEpoch: helper.GetUnixTimeInNanoSecond(),
+		URL:           getCompleteURLFromRequest(request),
+		HttpMethod:    request.Method,
+		StatusCode:    ctx.Writer.Status(),
+		Query:         request.URL.Query(),
+		ID:            getRequestID(),
+		IP:            request.RemoteAddr,
+		StartEpoch:    helper.GetUnixTimeInNanoSecond(),
+		UserAgent:     request.UserAgent(),
+		ApplicationID: helper.GetApplicationConfiguration().ApplicationID,
+		Application:   helper.GetApplicationConfiguration().Application,
 	}
 	ctx.Set(constant.ContextRequestMetaData, requestMeta)
 	helper.LogDetails(logrus.InfoLevel, constant.RequestReceivedMessage, requestMeta)
@@ -92,10 +89,9 @@ func FetchHttpReponseFromContext(ginContext *gin.Context) model.HttpResponse {
 }
 
 func getRequestID() string {
-	serviceID := "001"
+
 	uuid := uuid.New()
-	// Generate a unique request ID (e.g., a UUID)
-	requestID := fmt.Sprintf("%v_%v_%v_%v", serviceID, time.Now().YearDay(), time.Now().UTC().Hour(), uuid)
+	requestID := fmt.Sprintf("%v_%v_%v_%v", helper.GetApplicationConfiguration().ApplicationID, time.Now().YearDay(), time.Now().UTC().Hour(), uuid)
 
 	return requestID
 }

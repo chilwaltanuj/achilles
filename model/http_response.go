@@ -29,9 +29,9 @@ type ResponseData struct {
 	Pagination    Pagination
 }
 type Pagination struct {
-	TotalItems int `json:"totalItems"`
-	Offset     int `json:"offset"`
-	Limit      int `json:"limit"`
+	TotalItems int `json:"totalItems,omitempty"`
+	Offset     int `json:"offset,omitempty"`
+	Limit      int `json:"limit,omitempty"`
 }
 
 type RequestMetaData struct {
@@ -45,8 +45,8 @@ type RequestMetaData struct {
 
 	StartEpoch          int64
 	LatencyInNanoSecond int64
-	ServiceID           int64
+	ApplicationID       int64
 	TracingID           string
-	ServiceName         string
+	Application         string
 	Query               map[string][]string
 }

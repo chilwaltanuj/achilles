@@ -2,8 +2,8 @@ package model
 
 // ApplicationConfiguration represents the application configuration.
 type ApplicationConfiguration struct {
-	Application   string    `mapstructure:"application"`
-	ApplicationID int       `mapstructure:"application_id"`
+	Application   string    `mapstructure:"application"`    // to be unique within organization
+	ApplicationID int64     `mapstructure:"application_id"` // to be unique within organization
 	HttpPort      int       `mapstructure:"http_port"`
 	Log           LogConfig `mapstructure:"log"`
 }

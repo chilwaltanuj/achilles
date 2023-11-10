@@ -1,9 +1,7 @@
 package constant
 
 const (
-	HttpSuccess = "Your request has been granted!"
-
-	DependenciesLoaded = "Configuration loaded, logger built, and dependencies summoned to action. We're ready!"
+	DependenciesLoaded = "The stage is set! Configuration loaded, logger ready, and dependencies summoned to action."
 
 	ServerStartFailure    = "Oops, Achilles stumbled. Failed to unleash the server."
 	ServerStartSuccess    = "Achilles, the server, is unleashed, armed with code mightier than the sword."
@@ -12,5 +10,9 @@ const (
 	GracefulShutdownError   = "Achilles's shield has a crack! Graceful retreat is not an option."
 	GracefulShutdownSuccess = "With valor, Achilles lays down his sword. Server rests in peace."
 
-	PanicRecovery = "Oh no, the gods of Olympus have intervened (500). But fear not, for Achilles, the mightiest of warriors, swiftly turned this into a glorious victory (200)."
+	HttpOk                 = "Victory! Your request has triumphed over the challenges."
+	HttpUnauthorized       = "Alert! Achilles detects a Trojan horse in your midst. Security breach identified (401 - Unauthorized)."
+	HttpRouteNotFound      = "Achilles scours the horizon, but alas, Troy remains hidden. 404 - Troy Not Found."
+	HttpMethodNotSUpported = "Achilles arches an eyebrow in confusion. This method isn't part of the epic script. 405 - Method Not Supported."
+	HttpServerErrorPanic   = "Oh no, the gods of Olympus have intervened (500). But fear not, for Achilles, the mightiest of warriors, swiftly turned this into a glorious victory (200)."
 )
