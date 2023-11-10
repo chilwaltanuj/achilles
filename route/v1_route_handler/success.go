@@ -8,5 +8,5 @@ import (
 )
 
 func Success(ginContext *gin.Context) {
-	routeHelper.SetSuccessResponseWithOnlyMessage(ginContext, constant.HttpSuccess)
+	routeHelper.SetSuccessResponseWithOnlyMessage(ginContext, constant.HttpOk)
 }
