@@ -16,7 +16,6 @@ import (
 func UpdateRequestMetaDataInContext(ginContext *gin.Context) {
 	requestMetaData := GetRequestMetadataFromContext(ginContext)
 	requestMetaData.LatencyInNanoSecond = helper.GetUnixTimeInNanoSecond() - requestMetaData.StartEpoch
-	ginContext.Set(constant.ContextRequestMetaData, requestMetaData)
 }
 func GetHttpReponseFromContext(ginContext *gin.Context) model.HttpResponse {
 	if dataInterface, ok := ginContext.Get(constant.ContextHttpResponse); ok {
@@ -43,21 +42,21 @@ func SetHttpReponseInContext(ginContext *gin.Context, response model.HttpRespons
 }
 
 // GetRequestMetadata retrieves the request metadata from the Gin context.
-func GetRequestMetadataFromContext(ginContext *gin.Context) model.RequestMetaData {
+func GetRequestMetadataFromContext(ginContext *gin.Context) *model.RequestMetaData {
 	data, exists := ginContext.Get(constant.ContextRequestMetaData)
 	if !exists { //request received for the first time. build it first and then return it
 		return BuildAndSetRequestMetaInContext(ginContext)
 	}
-	if requestMeta, ok := data.(model.RequestMetaData); ok {
+	if requestMeta, ok := data.(*model.RequestMetaData); ok {
 		return requestMeta
 	}
 	return BuildAndSetRequestMetaInContext(ginContext)
 }
 
-func BuildAndSetRequestMetaInContext(ctx *gin.Context) model.RequestMetaData {
+func BuildAndSetRequestMetaInContext(ctx *gin.Context) *model.RequestMetaData {
 	request := ctx.Request
 
-	requestMeta := model.RequestMetaData{
+	requestMeta := &model.RequestMetaData{
 		URL:           getCompleteURLFromRequest(request),
 		HttpMethod:    request.Method,
 		StatusCode:    ctx.Writer.Status(),
@@ -70,11 +69,11 @@ func BuildAndSetRequestMetaInContext(ctx *gin.Context) model.RequestMetaData {
 		Application:   helper.GetApplicationConfiguration().Application,
 	}
 	ctx.Set(constant.ContextRequestMetaData, requestMeta)
-	helper.LogDetails(logrus.InfoLevel, constant.RequestReceivedMessage, requestMeta)
+	helper.LogDetails(logrus.InfoLevel, constant.RequestReceivedMessage, *requestMeta)
 	return requestMeta
 }
 
-func FetchRequestMetaDataFromContext(ginContext *gin.Context) model.RequestMetaData {
+func FetchRequestMetaDataFromContext(ginContext *gin.Context) *model.RequestMetaData {
 	return FetchHttpReponseFromContext(ginContext).MetaData
 }
 

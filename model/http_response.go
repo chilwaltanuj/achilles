@@ -5,7 +5,7 @@ package model
 // easy error handling
 type HttpResponse struct {
 	HttpResponseData
-	MetaData RequestMetaData
+	MetaData *RequestMetaData
 }
 
 type Response struct {
