@@ -31,7 +31,8 @@ func AttachMiddlewares(group *gin.RouterGroup) {
 	group.Use(PreRequestMiddlewares())
 	group.Use(PostRequestMiddlewares())
 
-	ginEngine.NoMethod(middlewareHandler.MethodNotSupported())
+	ginEngine.HandleMethodNotAllowed = true
+	ginEngine.NoMethod(middlewareHandler.MethodNotSupported)
 	ginEngine.NoRoute(middlewareHandler.RouteNotSupported)
 }
 

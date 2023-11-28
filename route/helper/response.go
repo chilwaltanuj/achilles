@@ -25,3 +25,12 @@ func SetSuccessResponseWithOnlyMessage(ginContext *gin.Context, message string) 
 	}
 	BuildAndSetHttpResponseInContext(ginContext, responseData)
 }
+
+func SetResponseWithMessageAndStatusCode(ginContext *gin.Context, message string, httpStatus int) {
+	responseData := model.HttpResponseData{
+		Success: true,
+		Status:  httpStatus,
+		Message: message,
+	}
+	BuildAndSetHttpResponseInContext(ginContext, responseData)
+}
