@@ -13,7 +13,7 @@ import (
 // RenderResponse renders the HTTP response in the desired format based on the "Accept" header.
 func RenderResponse(gincontext *gin.Context) {
 	acceptHeader := gincontext.Request.Header.Get(constant.HeaderAccept)
-	response := routeHelper.GetHttpReponseFromContext(gincontext)
+	response := routeHelper.GetHttpResponseFromContext(gincontext)
 
 	// Use the appropriate response format handler
 	switch acceptHeader {
