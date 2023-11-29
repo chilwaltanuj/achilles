@@ -57,7 +57,10 @@ With Achilles, logging becomes a breeze, providing comprehensive insights, effic
 
 ## Getting Started
 
-To initiate your journey with Achilles, follow these fundamental steps:
+**If you can't wait or don't want to do a local setup at all, instantly try this** [instant cloud setup for free](https://medium.com/stackademic/go-app-from-github-to-cloud-in-10-minutes-c6622bdda2a1).
+
+If you want to sail through the code , follow these fundamental steps:
+
 
 1. **Clone this Repository**: Start by cloning this repository to your local machine.
 2. **Install Go**: If you haven't already, install Go by following the [Go Installation Guide](https://golang.org/doc/install).
@@ -69,6 +72,7 @@ To initiate your journey with Achilles, follow these fundamental steps:
    ./main
    ```
 
+if you are facing any issue while setup try [setting-up worksapce](https://blog.stackademic.com/go-development-vs-code-workspace-be41470ca134)
 
 # Adding a New Route ( v1/test/success ) to Achilles
 
