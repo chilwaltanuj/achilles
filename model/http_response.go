@@ -19,14 +19,14 @@ type HttpResponseData struct {
 	Success bool
 	Status  int
 	Message string
-	ResponseData
+	*ResponseData
 }
 
 type ResponseData struct {
-	Data          interface{}
-	DataArray     []interface{}
-	HasPagination bool
-	Pagination    Pagination
+	Data          any         `json:"Data,omitempty"`
+	DataArray     []any       `json:"DataArrary,omitempty"`
+	HasPagination bool        `json:"HasPagination,omitempty"`
+	Pagination    *Pagination `json:"Pagination,omitempty"`
 }
 type Pagination struct {
 	TotalItems int `json:"totalItems,omitempty"`

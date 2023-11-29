@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func SetSuccessResponse(ginContext *gin.Context, data model.ResponseData) {
+func SetSuccessResponse(ginContext *gin.Context, data *model.ResponseData) {
 	responseData := model.HttpResponseData{
 		Success:      true,
 		Status:       200,
