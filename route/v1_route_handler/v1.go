@@ -21,6 +21,7 @@ func AddRouteHandlers() error {
 
 	versionOne.GET("test/crash", Crash)
 	versionOne.GET("test/success", Success)
+	versionOne.GET("joke", Joke)
 
 	return nil
 }

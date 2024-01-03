@@ -53,8 +53,8 @@ func BuildAndSetRequestMetaInContext(ctx *gin.Context) *model.RequestMetaData {
 		IP:            request.RemoteAddr,
 		StartEpoch:    helper.GetUnixTimeInNanoSecond(),
 		UserAgent:     request.UserAgent(),
-		ApplicationID: helper.GetApplicationConfiguration().ApplicationID,
-		Application:   helper.GetApplicationConfiguration().Application,
+		ApplicationID: helper.ApplicationConfiguration().ApplicationID,
+		Application:   helper.ApplicationConfiguration().Application,
 	}
 	defer ctx.Set(constant.ContextRequestMetaData, requestMeta) //ensure that the context is always set even if an error occurs.
 	helper.LogDetails(logrus.InfoLevel, constant.RequestReceivedMessage, *requestMeta)
@@ -65,7 +65,7 @@ func BuildAndSetRequestMetaInContext(ctx *gin.Context) *model.RequestMetaData {
 func getRequestID() string {
 
 	uuid := uuid.New()
-	requestID := fmt.Sprintf("%v_%v_%v_%v", helper.GetApplicationConfiguration().ApplicationID, carbon.Now().DayOfYear(), carbon.Now().Hour(), uuid)
+	requestID := fmt.Sprintf("%v_%v_%v_%v", helper.ApplicationConfiguration().ApplicationID, carbon.Now().DayOfYear(), carbon.Now().Hour(), uuid)
 
 	return requestID
 }

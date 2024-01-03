@@ -8,13 +8,6 @@ type HttpResponse struct {
 	MetaData *RequestMetaData
 }
 
-type Response struct {
-	Success bool
-	Status  int
-	Message string
-	ResponseData
-}
-
 type HttpResponseData struct {
 	Success bool
 	Status  int
