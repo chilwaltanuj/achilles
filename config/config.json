@@ -11,13 +11,15 @@
     "log_max_age_days": 28
   },
   "http_config": {
-    "timeout_in_ms": "100ms",
+    "timeout_in_ms": "2000ms",
     "hystrix_command": "default",
     "circuit_breaker_active_time_in_ms": 5000,
     "max_concurrent": 10,
     "error_threshold": 50,
-    "retry_max": 1,
+    "retry_max": 2,
     "retry_backoff_in_ms": "100ms",
-    "retry_jitter_in_ms": "100ms"
+    "retry_jitter_in_ms": "100ms",
+    "retry_max_duration": "1000ms",
+    "request_to_volume_threshold": 5
   }
 }

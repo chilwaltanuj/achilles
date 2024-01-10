@@ -2,88 +2,71 @@ package client
 
 import (
 	"achilles/model"
-	"bytes"
 	"context"
 	"encoding/json"
-	"io"
 	"net/http"
 	"time"
+
+	"github.com/afex/hystrix-go/hystrix"
 )
 
-// Execute performs an HTTP request using the hystrix client, adjusted as per loaded configuration.
-func Execute[T any](ginContext context.Context, clientHTTP model.ClientHttp, request model.ClientHTTPRequest) model.ClientResponseDetails {
-	isSuccessful := false
-	status := http.StatusFailedDependency
-	startTime := time.Now() // Start time
+// Execute performs a Hystrix-wrapped HTTP request and returns the response.
+func Execute[T any](ctx context.Context, clientHttp *model.ClientHttp, req model.ClientHTTPRequest) model.ClientResponseDetails {
+	startTime := time.Now()
 
-	response, err := execute[T](ginContext, clientHTTP, request)
+	// Perform the Hystrix-wrapped HTTP request
+	responseObject, hystrixErr := doHystrixRequest[T](ctx, clientHttp, req)
+
+	// Prepare and return the response details
+	return prepareResponse[T](hystrixErr, responseObject, startTime)
+}
+
+// doHystrixRequest executes the Hystrix-wrapped HTTP request.
+func doHystrixRequest[T any](ctx context.Context, clientHttp *model.ClientHttp, req model.ClientHTTPRequest) (*T, error) {
+	responseObject := new(T)
+	output := make(chan *T, 1)
+	errors := hystrix.GoC(ctx, req.HystrixCommand, func(ctx context.Context) error {
+		res, err := clientHttp.Client.R().
+			SetContext(ctx).
+			SetHeaders(req.Headers).
+			SetBody(req.Body).
+			Execute(req.Method, req.URL)
+		if err != nil {
+			return err
+		}
+		err = json.Unmarshal(res.Body(), responseObject)
+		if err != nil {
+			return err
+		}
+		output <- responseObject
+		return nil
+	}, nil)
+
+	select {
+	case out := <-output:
+		return out, nil
+	case err := <-errors:
+		return nil, err
+	case <-ctx.Done():
+		return nil, ctx.Err()
+	}
+}
+
+// prepareResponse prepares and returns the client response details.
+func prepareResponse[T any](hystrixErr error, responseObject *T, startTime time.Time) model.ClientResponseDetails {
 	elapsedTime := float32(time.Since(startTime).Microseconds()) / 1000
 
-	if err == nil {
-		isSuccessful = true
-		status = http.StatusOK
+	status := http.StatusOK
+	if hystrixErr != nil {
+		// This could be refined to extract actual status code from the error or response object
+		status = http.StatusFailedDependency
 	}
-	clientResponse := model.ClientResponseDetails{
-		IsSuccessful:   isSuccessful,
+
+	return model.ClientResponseDetails{
+		IsSuccessful:   hystrixErr == nil,
 		Status:         status,
-		ResponseStruct: response,
+		ResponseStruct: responseObject,
 		LatencyInMs:    elapsedTime,
-		Error:          err,
-	}
-
-	return clientResponse
-}
-
-// Execute performs an HTTP request using the given hystrix client and configuration.
-func execute[T any](ctx context.Context, clientHttp model.ClientHttp, req model.ClientHTTPRequest) (interface{}, error) {
-	var err error
-	var httpRequest *http.Request
-	var httpResponse *http.Response
-	var responseBody []byte
-	responseObject := new(T)
-
-	if httpRequest, err = createHTTPRequest(ctx, req); err == nil {
-		if httpResponse, err = clientHttp.Client.Do(httpRequest); err == nil {
-			defer httpResponse.Body.Close()
-			if responseBody, err = io.ReadAll(httpResponse.Body); err == nil {
-				err = json.Unmarshal(responseBody, responseObject)
-				if err == nil {
-					return responseObject, nil
-				}
-			}
-		}
-	}
-
-	return nil, err
-}
-
-func createHTTPRequest(ctx context.Context, req model.ClientHTTPRequest) (*http.Request, error) {
-	var httpRequest *http.Request
-	var bodyBytes []byte
-	var err error
-
-	if bodyBytes, err = mustMarshalBody(req.Body); err == nil {
-		if httpRequest, err = http.NewRequestWithContext(ctx, req.Method, req.URL, bytes.NewBuffer(bodyBytes)); err == nil {
-			for key, value := range req.Headers {
-				httpRequest.Header.Add(key, value)
-			}
-			return httpRequest, nil
-		}
-	}
-	return nil, err
-}
-
-func mustMarshalBody(body interface{}) ([]byte, error) {
-	if body == nil {
-		return nil, nil
-	}
-
-	switch t := body.(type) {
-	case string:
-		return []byte(t), nil
-	case []byte:
-		return t, nil
-	default:
-		return json.Marshal(body)
+		Error:          hystrixErr,
 	}
 }

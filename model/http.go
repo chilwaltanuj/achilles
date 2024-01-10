@@ -9,10 +9,11 @@ type Client interface {
 }
 
 type ClientHTTPRequest struct {
-	Method  string
-	URL     string
-	Headers map[string]string
-	Body    interface{}
+	Method         string
+	URL            string
+	HystrixCommand string
+	Headers        map[string]string
+	Body           interface{}
 }
 
 type ClientResponseDetails struct {

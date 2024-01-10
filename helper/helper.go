@@ -13,7 +13,7 @@ import (
 //TODO : Revisit global variable and DI container post intergration of few clients e.g. http , postgres etc.
 
 var globalLogger *logrus.Logger
-var clientHTTP model.ClientHttp
+var clientHTTP *model.ClientHttp
 var globalContainer *dig.Container
 var globalConfiguration *model.ApplicationConfiguration
 
@@ -34,7 +34,7 @@ func ApplicationConfiguration() *model.ApplicationConfiguration {
 	return globalConfiguration
 }
 
-func GetHttpClient() model.ClientHttp {
+func GetHttpClient() *model.ClientHttp {
 	return clientHTTP
 }
 

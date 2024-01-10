@@ -34,4 +34,6 @@ type ClientHTTPConfig struct {
 	RetryMax                     int           `mapstructure:"retry_max"`
 	RetryBackoffDuration         time.Duration `mapstructure:"retry_backoff_in_ms"`
 	RetryJitterDuration          time.Duration `mapstructure:"retry_jitter_in_ms"`
+	RetryMaxWaitDuration         time.Duration `mapstructure:"retry_jitter_in_ms"`
+	RequestVolumeThreshold       int           `mapstructure:"request_to_volume_threshold"`
 }

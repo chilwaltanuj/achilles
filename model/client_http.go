@@ -1,12 +1,12 @@
 package model
 
 import (
-	"github.com/gojek/heimdall/v7/hystrix"
+	"github.com/go-resty/resty/v2"
 	"github.com/sirupsen/logrus"
 )
 
 type ClientHttp struct {
-	Client *hystrix.Client
+	Client *resty.Client
 	Logger *logrus.Logger
 }
 

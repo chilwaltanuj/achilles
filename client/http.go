@@ -2,23 +2,55 @@ package client
 
 import (
 	"achilles/model"
+	"errors"
+	"net/http"
+	"time"
 
-	"github.com/gojek/heimdall/v7"
-	"github.com/gojek/heimdall/v7/hystrix"
+	"github.com/afex/hystrix-go/hystrix"
+	"github.com/go-resty/resty/v2"
 	"github.com/sirupsen/logrus"
 )
 
-// NewHTTPClient creates a new hystrix client with the given configuration.
-func NewHTTPClient(config model.ClientHTTPConfig, logger *logrus.Logger) model.ClientHttp {
-	hystrixClient := hystrix.NewClient(
-		hystrix.WithCommandName(config.HystrixCommand),
-		hystrix.WithHTTPTimeout(config.TimeoutDuration),
-		hystrix.WithHystrixTimeout(config.TimeoutDuration),
-		hystrix.WithMaxConcurrentRequests(config.MaxConcurrent),
-		hystrix.WithRetrier(heimdall.NewRetrier(heimdall.NewConstantBackoff(config.RetryBackoffDuration, config.RetryJitterDuration))),
-		hystrix.WithRetryCount(config.RetryMax),
-		hystrix.WithErrorPercentThreshold(config.ErrorThreshold),
-		hystrix.WithSleepWindow(config.CircuitBreakerActiveTimeInMs),
-	)
-	return model.ClientHttp{Client: hystrixClient, Logger: logger}
+// TODO - refactoring needed
+func NewHTTPClient(config model.ClientHTTPConfig, logger *logrus.Logger) *model.ClientHttp {
+	if config.TimeoutDuration <= 0 || config.RetryMax < 0 || config.MaxConcurrent <= 0 {
+		logger.Error("Invalid configuration for HTTP client")
+		return nil
+	}
+
+	restyClient := resty.New()
+
+	restyClient.SetTimeout(config.TimeoutDuration).
+		SetRetryCount(config.RetryMax).
+		SetRetryWaitTime(config.RetryBackoffDuration).
+		SetRetryMaxWaitTime(config.RetryMaxWaitDuration).
+		SetLogger(logger).
+		SetDebug(true). // Assuming DebugMode is a boolean in ClientHTTPConfig
+		SetRetryAfter(func(client *resty.Client, resp *resty.Response) (time.Duration, error) {
+			if resp.StatusCode() == http.StatusTooManyRequests {
+				return time.Duration(config.RetryBackoffDuration), nil
+			}
+			return 0, errors.New("quota exceeded")
+		}).
+		OnError(func(req *resty.Request, err error) {
+			logger.Errorf("HTTP request error: %v, URL: %s, Method: %s", err, req.URL, req.Method)
+		}).
+		OnBeforeRequest(func(client *resty.Client, req *resty.Request) error {
+			logger.Infof("Sending request: URL: %s, Method: %s", req.URL, req.Method)
+			return nil
+		}).
+		OnAfterResponse(func(client *resty.Client, resp *resty.Response) error {
+			logger.Infof("Received response: Status: %s, Time: %v", resp.Status(), resp.Time())
+			return nil
+		})
+
+	hystrix.ConfigureCommand(config.HystrixCommand, hystrix.CommandConfig{
+		Timeout:                int(config.TimeoutDuration / time.Millisecond),
+		MaxConcurrentRequests:  config.MaxConcurrent,
+		ErrorPercentThreshold:  config.ErrorThreshold,
+		RequestVolumeThreshold: config.RequestVolumeThreshold,
+		SleepWindow:            config.CircuitBreakerActiveTimeInMs,
+	})
+
+	return &model.ClientHttp{Client: restyClient, Logger: logger}
 }

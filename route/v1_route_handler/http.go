@@ -20,7 +20,8 @@ func Joke(ginContext *gin.Context) {
 		Headers: constant.Headers,
 		Body:    nil,
 	}
-	contextWithTimeout, cancel := context.WithTimeout(ginContext, 100*time.Millisecond)
+	//TODO - context timeout need to be configurable
+	contextWithTimeout, cancel := context.WithTimeout(ginContext, 2000*time.Millisecond)
 	defer cancel()
 
 	if response := helper.Execute[model.Joke_Random](contextWithTimeout, request); response.IsSuccessful {
