@@ -13,15 +13,15 @@ import (
 
 // TODO - refactoring needed
 func NewHTTPClient(config model.ClientHTTPConfig, logger *logrus.Logger) *model.ClientHttp {
-	if config.TimeoutDuration <= 0 || config.RetryMax < 0 || config.MaxConcurrent <= 0 {
+	if config.RequestTimeoutDuration <= 0 || config.RetryCountMax < 0 || config.MaxConcurrentRequests <= 0 {
 		logger.Error("Invalid configuration for HTTP client")
 		return nil
 	}
 
 	restyClient := resty.New()
 
-	restyClient.SetTimeout(config.TimeoutDuration).
-		SetRetryCount(config.RetryMax).
+	restyClient.SetTimeout(config.RequestTimeoutDuration).
+		SetRetryCount(config.RetryCountMax).
 		SetRetryWaitTime(config.RetryBackoffDuration).
 		SetRetryMaxWaitTime(config.RetryMaxWaitDuration).
 		SetLogger(logger).
@@ -44,12 +44,12 @@ func NewHTTPClient(config model.ClientHTTPConfig, logger *logrus.Logger) *model.
 			return nil
 		})
 
-	hystrix.ConfigureCommand(config.HystrixCommand, hystrix.CommandConfig{
-		Timeout:                int(config.TimeoutDuration / time.Millisecond),
-		MaxConcurrentRequests:  config.MaxConcurrent,
-		ErrorPercentThreshold:  config.ErrorThreshold,
+	hystrix.ConfigureCommand(config.CircuitBreakerName, hystrix.CommandConfig{
+		Timeout:                int(config.RequestTimeoutDuration / time.Millisecond),
+		MaxConcurrentRequests:  config.MaxConcurrentRequests,
+		ErrorPercentThreshold:  config.ErrorThresholdPercentage,
 		RequestVolumeThreshold: config.RequestVolumeThreshold,
-		SleepWindow:            config.CircuitBreakerActiveTimeInMs,
+		SleepWindow:            config.CircuitBreakerActiveTimeMs,
 	})
 
 	return &model.ClientHttp{Client: restyClient, Logger: logger}

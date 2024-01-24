@@ -1,8 +1,6 @@
 package model
 
-import (
-	"time"
-)
+import "time"
 
 // ApplicationConfiguration represents the application configuration.
 type ApplicationConfiguration struct {
@@ -26,14 +24,14 @@ type LogConfig struct {
 
 // ClientHTTPConfig represents the HTTP client configuration.
 type ClientHTTPConfig struct {
-	TimeoutDuration              time.Duration `mapstructure:"timeout_in_ms"`
-	HystrixCommand               string        `mapstructure:"hystrix_command"`
-	CircuitBreakerActiveTimeInMs int           `mapstructure:"circuit_breaker_active_time_in_ms"`
-	MaxConcurrent                int           `mapstructure:"max_concurrent"`
-	ErrorThreshold               int           `mapstructure:"error_threshold"`
-	RetryMax                     int           `mapstructure:"retry_max"`
-	RetryBackoffDuration         time.Duration `mapstructure:"retry_backoff_in_ms"`
-	RetryJitterDuration          time.Duration `mapstructure:"retry_jitter_in_ms"`
-	RetryMaxWaitDuration         time.Duration `mapstructure:"retry_jitter_in_ms"`
-	RequestVolumeThreshold       int           `mapstructure:"request_to_volume_threshold"`
+	RequestTimeoutDuration     time.Duration `mapstructure:"request_timeout_ms"`
+	CircuitBreakerName         string        `mapstructure:"circuit_breaker_name"`
+	CircuitBreakerActiveTimeMs int           `mapstructure:"circuit_breaker_active_duration_ms"`
+	MaxConcurrentRequests      int           `mapstructure:"max_concurrent_requests"`
+	ErrorThresholdPercentage   int           `mapstructure:"error_threshold_percentage"`
+	RetryCountMax              int           `mapstructure:"retry_count_max"`
+	RetryBackoffDuration       time.Duration `mapstructure:"retry_backoff_ms"`
+	RetryJitterDuration        time.Duration `mapstructure:"retry_jitter_ms"`
+	RetryMaxWaitDuration       time.Duration `mapstructure:"retry_duration_max"`
+	RequestVolumeThreshold     int           `mapstructure:"request_volume_threshold"`
 }

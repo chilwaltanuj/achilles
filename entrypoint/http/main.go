@@ -16,7 +16,7 @@ import (
 )
 
 func main() {
-	configuration, err := config.BuildAndGetApplicationConfiguration()
+	configuration, err := config.PrepareAndFetchApplicationConfiguration()
 	if err != nil {
 		fmt.Print(constant.ServerStartFailure, err)
 		return
