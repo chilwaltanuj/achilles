@@ -9,6 +9,10 @@ type ApplicationConfiguration struct {
 	HttpPort      int              `mapstructure:"http_port"`
 	Log           LogConfig        `mapstructure:"log_config"`
 	HTTP          ClientHTTPConfig `mapstructure:"http_config"`
+	Config        ContextConfig    `mapstructure:"context_config"`
+}
+type ContextConfig struct {
+	Timmeout time.Duration `mapstructure:"timeout"`
 }
 
 // LogConfig represents the log configuration.

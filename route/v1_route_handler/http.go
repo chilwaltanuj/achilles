@@ -6,7 +6,6 @@ import (
 	"achilles/model"
 	"context"
 	"net/http"
-	"time"
 
 	routeHelper "achilles/route/helper"
 
@@ -20,8 +19,8 @@ func Joke(ginContext *gin.Context) {
 		Headers: constant.Headers,
 		Body:    nil,
 	}
-	//TODO - context timeout need to be configurable
-	contextWithTimeout, cancel := context.WithTimeout(ginContext, 2000*time.Millisecond)
+
+	contextWithTimeout, cancel := context.WithTimeout(ginContext, helper.ApplicationConfiguration().Config.Timmeout)
 	defer cancel()
 
 	if response := helper.Execute[model.Joke_Random](contextWithTimeout, request); response.IsSuccessful {
