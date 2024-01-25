@@ -1,6 +1,7 @@
 package config
 
 import (
+	"achilles/constant"
 	"achilles/model"
 	"fmt"
 	"log"
@@ -16,26 +17,25 @@ func PrepareAndFetchApplicationConfiguration() (*model.ApplicationConfiguration,
 	viper.AddConfigPath("./config") // Path to the main config file
 
 	if err := viper.ReadInConfig(); err != nil {
-		return nil, fmt.Errorf("achilles stumbled while reading the oracle's scroll (config.default.json): %w", err)
+		return nil, fmt.Errorf(constant.ConfigDefaultReadError, err)
 	}
-	log.Println("Achilles nods wisely, having read the oracle's scroll (config.default.json)")
+	log.Println(constant.ConfigDefaultLoadSuccess)
 
 	environment := viper.GetString("deployment_environment")
 	envConfigFile := fmt.Sprintf("config.%s.json", environment)
 
 	viper.SetConfigName(envConfigFile)
 	if err := viper.MergeInConfig(); err != nil {
-		log.Printf("Achilles raises an eyebrow: 'Are we sure about environment = %s?' Couldn't find the scroll %s: %s. Sticking to the oracle's advice (config.default.json).",
-			environment, envConfigFile, err)
+		log.Printf(constant.ConfigEnvLoadFailure, environment, envConfigFile, err)
 	} else {
-		log.Printf("Achilles finds and unrolls the scroll %s, blending its secrets with the oracle's wisdom (config.default.json).", envConfigFile)
+		log.Printf(constant.ConfigEnvLoadSuccess, envConfigFile)
 	}
 
 	var applicationConfiguration model.ApplicationConfiguration
 	if err := viper.Unmarshal(&applicationConfiguration); err != nil {
-		return nil, fmt.Errorf("achilles grunts in frustration: Something's amiss with marshalling the scrolls into formation: %w", err)
+		return nil, fmt.Errorf(constant.ConfigUnmarshalError, err)
 	}
 
-	log.Println("Achilles stands ready, configurations in hand and a strategy in mind.")
+	log.Println(constant.ConfigReady)
 	return &applicationConfiguration, nil
 }
