@@ -16,7 +16,7 @@ import (
 // createLogger creates and configures a new logrus logger.
 func BuildAndGetLogger(logConfig model.LogConfig) *logrus.Logger {
 	logger := logrus.New()
-	logger.SetLevel(logrus.InfoLevel)
+	logger.SetLevel(logrus.DebugLevel)
 	logger.Formatter = &CustomFormatter{logConfig.EnableIndentation}
 
 	if logConfig.LogInTerminalOverFile {

@@ -1,9 +1,10 @@
 {
-  "deployment_environment":"development",
+  "deployment_environment":"default",
   "application": "Achilles",
   "application_id": 1,
   "http_port": 80,
   "log_config": {
+    "log_level":"debug",
     "log_in_terminal_over_file": true,
     "enable_indentation": true,
     "log_file_path": "log/",
