@@ -13,10 +13,33 @@ import (
 	"gopkg.in/natefinch/lumberjack.v2"
 )
 
+func GetLogLevel(logConfigLevel string) logrus.Level {
+	var level logrus.Level
+	switch logConfigLevel {
+	case "panic":
+		level = logrus.PanicLevel
+	case "fatal":
+		level = logrus.FatalLevel
+	case "error":
+		level = logrus.ErrorLevel
+	case "warning":
+		level = logrus.WarnLevel
+	case "info":
+		level = logrus.InfoLevel
+	case "debug":
+		level = logrus.DebugLevel
+	case "trace":
+		level = logrus.TraceLevel
+	default:
+		level = logrus.InfoLevel // Default level is Info if config is not set or invalid
+	}
+	return level
+}
+
 // createLogger creates and configures a new logrus logger.
 func BuildAndGetLogger(logConfig model.LogConfig) *logrus.Logger {
 	logger := logrus.New()
-	logger.SetLevel(logrus.DebugLevel)
+	logger.SetLevel(GetLogLevel(logConfig.LogLevel))
 	logger.Formatter = &CustomFormatter{logConfig.EnableIndentation}
 
 	if logConfig.LogInTerminalOverFile {

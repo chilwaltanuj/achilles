@@ -23,7 +23,7 @@ func BuildDependencies(appConfiguration *model.ApplicationConfiguration) {
 	clientHTTP = client.NewHTTPClient(ApplicationConfiguration().HTTP, GetLogger())
 	initializeDependecies(appConfiguration)
 
-	LogDetails(logrus.InfoLevel, constant.DependenciesLoaded, *globalConfiguration)
+	LogDetails(constant.LogLevelInfo, constant.DependenciesLoaded, *globalConfiguration)
 }
 
 func Execute[T any](ginContext context.Context, request model.ClientHTTPRequest) model.ClientResponseDetails {

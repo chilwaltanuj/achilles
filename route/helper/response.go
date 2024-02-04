@@ -7,53 +7,48 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/sirupsen/logrus"
 )
 
 func SetSuccessResponse(ginContext *gin.Context, data *model.ResponseData) {
-	responseData := model.HttpResponseData{
-		Success:      true,
-		Status:       200,
-		Message:      constant.HttpOk,
-		ResponseData: data,
-	}
-	BuildAndSetHttpResponseInContext(ginContext, responseData)
+	setResponse(ginContext, http.StatusOK, constant.HttpOk, data, true)
 }
 
 func SetSuccessResponseWithOnlyMessage(ginContext *gin.Context, message string) {
-	responseData := model.HttpResponseData{
-		Success: true,
-		Status:  200,
-		Message: message,
-	}
-	BuildAndSetHttpResponseInContext(ginContext, responseData)
+	setResponse(ginContext, http.StatusOK, message, nil, true)
 }
 
 func SetFailureResponseWithStatusCode(ginContext *gin.Context, httpStatus int, err error) {
-	message := "something Failed"
-
-	switch httpStatus {
-	case http.StatusFailedDependency:
-		message = constant.DependencyFailed
-	case http.StatusMethodNotAllowed:
-		message = constant.HttpMethodNotSUpported
-	case http.StatusNotFound:
-		message = constant.HttpRouteNotFound
-	}
-	responseData := model.HttpResponseData{
-		Success: true,
-		Status:  httpStatus,
-		Message: message,
-	}
-	BuildAndSetHttpResponseInContext(ginContext, responseData)
-	helper.LogDetails(logrus.ErrorLevel, message, err)
+	message := getFailureMessageByStatusCode(httpStatus)
+	setResponse(ginContext, httpStatus, message, nil, false)
+	helper.LogDetails(constant.LogLevelError, message, err)
 }
 
 func SetResponseWithMessageAndStatusCode(ginContext *gin.Context, message string, httpStatus int) {
+	setResponse(ginContext, httpStatus, message, nil, httpStatus < 400)
+}
+
+// Helper function to avoid code duplication and ensure the 'Success' flag aligns with the response status.
+func setResponse(ginContext *gin.Context, status int, message string, data *model.ResponseData, success bool) {
 	responseData := model.HttpResponseData{
-		Success: true,
-		Status:  httpStatus,
-		Message: message,
+		Success:      success,
+		Status:       status,
+		Message:      message,
+		ResponseData: data,
 	}
 	BuildAndSetHttpResponseInContext(ginContext, responseData)
+	ginContext.Status(status) // Ensure HTTP status code is set on the response as well.
+}
+
+// Extract the switch statement into its own function for cleaner code and easier maintenance.
+func getFailureMessageByStatusCode(status int) string {
+	switch status {
+	case http.StatusFailedDependency:
+		return constant.DependencyFailed
+	case http.StatusMethodNotAllowed:
+		return constant.HttpMethodNotSupported // Fixed typo in constant name
+	case http.StatusNotFound:
+		return constant.HttpRouteNotFound
+	default:
+		return "Something failed"
+	}
 }

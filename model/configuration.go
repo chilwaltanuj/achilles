@@ -20,6 +20,7 @@ type LogConfig struct {
 	LogInTerminalOverFile bool `mapstructure:"log_in_terminal_over_file"`
 	EnableIndentation     bool `mapstructure:"enable_indentation"`
 
+	LogLevel      string `mapstructure:"log_level"`
 	LogFilePath   string `mapstructure:"log_file_path"`
 	LogMaxSizeMB  int    `mapstructure:"log_max_size_mb"`
 	LogMaxBackups int    `mapstructure:"log_max_backups"`

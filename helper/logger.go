@@ -1,6 +1,8 @@
 package helper
 
 import (
+	"achilles/client"
+	"achilles/constant"
 	"reflect"
 	"runtime/debug"
 
@@ -8,14 +10,15 @@ import (
 )
 
 // LogDetails logs a message with structured data.
-func LogDetails(logLevel logrus.Level, message string, dataToLog any) {
+func LogDetails(logLevelInfo string, message string, dataToLog any) {
 	entry := globalLogger.WithFields(logrus.Fields{})
 	entry = LogStructFields(entry, dataToLog)
-	entry.Log(logLevel, message)
+	logrusLogLevel := client.GetLogLevel(logLevelInfo)
+	entry.Log(logrusLogLevel, message)
 }
 
 func LogMessageWithStackTrace(errorMessage string) {
-	LogDetails(logrus.ErrorLevel, errorMessage, string(debug.Stack()))
+	LogDetails(constant.LogLevelError, errorMessage, string(debug.Stack()))
 }
 
 // LogStructFields logs the fields of a struct in a Logrus entry.

@@ -9,7 +9,7 @@ import (
 )
 
 func MethodNotSupported(gincontext *gin.Context) {
-	routeHelper.SetResponseWithMessageAndStatusCode(gincontext, constant.HttpMethodNotSUpported, http.StatusMethodNotAllowed)
+	routeHelper.SetResponseWithMessageAndStatusCode(gincontext, constant.HttpMethodNotSupported, http.StatusMethodNotAllowed)
 	RenderResponse(gincontext)
 }
 

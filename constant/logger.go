@@ -10,4 +10,12 @@ const (
 
 	RenderResponseMessage  = "middlewareHandler.RenderResponse executed and response rendered"
 	RequestReceivedMessage = "route.helper.BuildAndSetRequestMetaInContext executed and requestlogged"
+
+	LogLevelPanic = "panic"
+	LogLevelFatal = "fatal"
+	LogLevelWarn  = "warning"
+	LogLevelInfo  = "info"
+	LogLevelDebug = "debug"
+	LogLevelTrace = "trace"
+	LogLevelError = "error"
 )

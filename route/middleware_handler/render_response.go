@@ -7,7 +7,6 @@ import (
 	routeHelper "achilles/route/helper"
 
 	"github.com/gin-gonic/gin"
-	"github.com/sirupsen/logrus"
 )
 
 // RenderResponse renders the HTTP response in the desired format based on the "Accept" header.
@@ -23,5 +22,5 @@ func RenderResponse(gincontext *gin.Context) {
 		gincontext.JSON(response.Status, response)
 	}
 
-	helper.LogDetails(logrus.InfoLevel, constant.RenderResponseMessage, response)
+	helper.LogDetails(constant.LogLevelInfo, constant.RenderResponseMessage, response)
 }

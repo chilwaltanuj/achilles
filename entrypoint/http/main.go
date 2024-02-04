@@ -6,13 +6,12 @@ import (
 	"achilles/helper"
 	"achilles/model"
 	"achilles/route"
+	"context"
 	"fmt"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
-
-	"github.com/sirupsen/logrus"
 )
 
 func main() {
@@ -35,7 +34,7 @@ func BuildServer(configuration *model.ApplicationConfiguration) {
 func startServer(server *http.Server) {
 	err := server.ListenAndServe()
 	if err != nil && err != http.ErrServerClosed {
-		helper.LogDetails(logrus.FatalLevel, constant.ServerStartFailure, err)
+		helper.LogDetails(constant.LogLevelFatal, constant.ServerStartFailure, err)
 		os.Exit(1)
 	}
 }
@@ -57,11 +56,11 @@ func gracefulShutdownOnClosureSignals(server *http.Server) {
 	sig := <-signalChannel
 
 	message := fmt.Sprintf(constant.ServerShutdownRequest, sig)
-	helper.LogDetails(logrus.FatalLevel, message, "")
+	helper.LogDetails(constant.LogLevelFatal, message, "")
 
-	if err := server.Shutdown(nil); err != nil {
-		helper.LogDetails(logrus.ErrorLevel, constant.GracefulShutdownError, err)
+	if err := server.Shutdown(context.TODO()); err != nil {
+		helper.LogDetails(constant.LogLevelWarn, constant.GracefulShutdownError, err)
 	} else {
-		helper.LogDetails(logrus.InfoLevel, constant.GracefulShutdownSuccess, nil)
+		helper.LogDetails(constant.LogLevelInfo, constant.GracefulShutdownSuccess, nil)
 	}
 }

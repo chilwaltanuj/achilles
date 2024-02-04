@@ -10,7 +10,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/golang-module/carbon/v2"
 	"github.com/google/uuid"
-	"github.com/sirupsen/logrus"
 )
 
 func UpdateRequestMetaDataInContext(ginContext *gin.Context) {
@@ -57,7 +56,7 @@ func BuildAndSetRequestMetaInContext(ctx *gin.Context) *model.RequestMetaData {
 		Application:   helper.ApplicationConfiguration().Application,
 	}
 	defer ctx.Set(constant.ContextRequestMetaData, requestMeta) //ensure that the context is always set even if an error occurs.
-	helper.LogDetails(logrus.InfoLevel, constant.RequestReceivedMessage, *requestMeta)
+	helper.LogDetails(constant.LogLevelInfo, constant.RequestReceivedMessage, *requestMeta)
 
 	return requestMeta
 }
