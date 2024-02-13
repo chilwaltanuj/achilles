@@ -36,7 +36,7 @@ type RequestMetaData struct {
 
 	StatusCode int
 
-	StartEpoch    int64
+	StartEpochNs  int64
 	LatencyInMs   float64
 	ApplicationID int64
 	TracingID     string
