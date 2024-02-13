@@ -14,7 +14,7 @@ import (
 
 func UpdateRequestMetaDataInContext(ginContext *gin.Context) {
 	requestMetaData := GetRequestMetadataFromContext(ginContext)
-	requestMetaData.LatencyInNanoSecond = helper.GetUnixTimeInNanoSecond() - requestMetaData.StartEpoch
+	requestMetaData.LatencyInMs = float64(helper.GetUnixTimeInNanoSecond()-requestMetaData.StartEpoch) / 1000000.0
 }
 func GetHttpResponseFromContext(ginContext *gin.Context) model.HttpResponse {
 	if dataInterface, ok := ginContext.Get(constant.ContextHttpResponse); ok {

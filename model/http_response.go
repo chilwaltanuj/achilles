@@ -36,10 +36,10 @@ type RequestMetaData struct {
 
 	StatusCode int
 
-	StartEpoch          int64
-	LatencyInNanoSecond int64
-	ApplicationID       int64
-	TracingID           string
-	Application         string
-	Query               map[string][]string
+	StartEpoch    int64
+	LatencyInMs   float64
+	ApplicationID int64
+	TracingID     string
+	Application   string
+	Query         map[string][]string
 }
