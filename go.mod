@@ -8,6 +8,8 @@ require (
 	github.com/go-resty/resty/v2 v2.11.0
 	github.com/golang-module/carbon/v2 v2.2.11
 	github.com/google/uuid v1.3.1
+	github.com/jmoiron/sqlx v1.3.5
+	github.com/lib/pq v1.10.9
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/viper v1.16.0
 	go.uber.org/dig v1.17.0

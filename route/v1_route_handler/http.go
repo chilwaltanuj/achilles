@@ -23,7 +23,7 @@ func Joke(ginContext *gin.Context) {
 	contextWithTimeout, cancel := context.WithTimeout(ginContext, helper.ApplicationConfiguration().Config.Timmeout)
 	defer cancel()
 
-	if response := helper.Execute[model.Joke_Random](contextWithTimeout, request); response.IsSuccessful {
+	if response := helper.ExecuteHttpRequest[model.Joke_Random](contextWithTimeout, request); response.IsSuccessful {
 		routeHelper.SetSuccessResponse(ginContext, &model.ResponseData{Data: response})
 	} else {
 		routeHelper.SetFailureResponseWithStatusCode(ginContext, http.StatusFailedDependency, response.Error)

@@ -24,6 +24,18 @@
     "retry_duration_max": "1000ms",
     "request_volume_threshold": 5
   },
+  "rdbms_config": {
+    "request_timeout_ms": "2000ms",
+    "circuit_breaker_name": "default",
+    "circuit_breaker_active_duration_ms": 5000,
+    "max_concurrent_requests": 10,
+    "error_threshold_percentage": 50,
+    "retry_count_max": 2,
+    "retry_backoff_ms": "100ms",
+    "retry_jitter_ms": "100ms",
+    "retry_duration_max": "1000ms",
+    "request_volume_threshold": 5
+  },
   "context_config":{
     "timeout":"5000ms"
   }

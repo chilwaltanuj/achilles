@@ -4,12 +4,13 @@ import "time"
 
 // ApplicationConfiguration represents the application configuration.
 type ApplicationConfiguration struct {
-	Application   string           `mapstructure:"application"`    // to be unique within organization
-	ApplicationID int64            `mapstructure:"application_id"` // to be unique within organization
-	HttpPort      int              `mapstructure:"http_port"`
-	Log           LogConfig        `mapstructure:"log_config"`
-	HTTP          ClientHTTPConfig `mapstructure:"http_config"`
-	Config        ContextConfig    `mapstructure:"context_config"`
+	Application   string            `mapstructure:"application"`    // to be unique within organization
+	ApplicationID int64             `mapstructure:"application_id"` // to be unique within organization
+	HttpPort      int               `mapstructure:"http_port"`
+	Log           LogConfig         `mapstructure:"log_config"`
+	HTTP          ClientHTTPConfig  `mapstructure:"http_config"`
+	RDBMS         ClientRDBMSConfig `mapstructure:"http_config"`
+	Config        ContextConfig     `mapstructure:"context_config"`
 }
 type ContextConfig struct {
 	Timmeout time.Duration `mapstructure:"timeout"`
@@ -39,4 +40,18 @@ type ClientHTTPConfig struct {
 	RetryJitterDuration        time.Duration `mapstructure:"retry_jitter_ms"`
 	RetryMaxWaitDuration       time.Duration `mapstructure:"retry_duration_max"`
 	RequestVolumeThreshold     int           `mapstructure:"request_volume_threshold"`
+}
+
+type ClientRDBMSConfig struct {
+	DSN                        string        // Data Source Name for database connection
+	MaxOpenConns               int           // Maximum number of open connections to the database
+	MaxIdleConns               int           // Maximum number of connections in the idle connection pool
+	ConnMaxLifetime            time.Duration // Maximum amount of time a connection may be reused
+	CircuitBreakerName         string        // Name of the circuit breaker for the database client
+	RequestTimeoutDuration     time.Duration // Request timeout duration for database operations
+	CircuitBreakerActiveTimeMs int           // Request timeout duration for database operations
+	MaxConcurrentRequests      int           // Maximum number of concurrent requests for the circuit breaker
+	ErrorThresholdPercentage   int           // Error percentage threshold to trip the circuit breaker
+	RequestVolumeThreshold     int           // Minimum number of requests to consider before tripping the circuit breaker
+	SleepWindow                time.Duration // Duration the circuit breaker stays open before allowing a single test request
 }

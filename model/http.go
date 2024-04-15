@@ -2,10 +2,17 @@ package model
 
 import (
 	"context"
+
+	"github.com/go-resty/resty/v2"
+	"github.com/sirupsen/logrus"
 )
 
 type Client interface {
 	Execute(context.Context, ClientHTTPRequest, interface{}) (any, error)
+}
+type ClientHttp struct {
+	Client *resty.Client
+	Logger *logrus.Logger
 }
 
 type ClientHTTPRequest struct {

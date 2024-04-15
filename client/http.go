@@ -3,6 +3,7 @@ package client
 import (
 	"achilles/model"
 	"errors"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -12,10 +13,9 @@ import (
 )
 
 // NewHTTPClient initializes a new HTTP client with given configuration and logger.
-func NewHTTPClient(config model.ClientHTTPConfig, logger *logrus.Logger) *model.ClientHttp {
+func NewHTTPClient(config model.ClientHTTPConfig, logger *logrus.Logger) (*model.ClientHttp, error) {
 	if err := validateClientConfig(config); err != nil {
-		logger.Error(err)
-		return nil
+		return nil, fmt.Errorf("HTTP Validation Failed")
 	}
 
 	restyClient := resty.New().
@@ -32,7 +32,7 @@ func NewHTTPClient(config model.ClientHTTPConfig, logger *logrus.Logger) *model.
 
 	configureHystrix(config)
 
-	return &model.ClientHttp{Client: restyClient, Logger: logger}
+	return &model.ClientHttp{Client: restyClient, Logger: logger}, nil
 }
 
 // validateClientConfig checks if the provided HTTP client configuration is valid.

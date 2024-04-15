@@ -14,20 +14,34 @@ import (
 
 var globalLogger *logrus.Logger
 var clientHTTP *model.ClientHttp
+var clientRDBMS *model.ClientRDBMS
 var globalContainer *dig.Container
 var globalConfiguration *model.ApplicationConfiguration
+var blockerError error
 
-func BuildDependencies(appConfiguration *model.ApplicationConfiguration) {
+func BuildDependencies(appConfiguration *model.ApplicationConfiguration) error {
 	globalConfiguration = appConfiguration
 	globalLogger = client.BuildAndGetLogger(appConfiguration.Log)
-	clientHTTP = client.NewHTTPClient(ApplicationConfiguration().HTTP, GetLogger())
-	initializeDependecies(appConfiguration)
+
+	if clientHTTP, blockerError = client.NewHTTPClient(ApplicationConfiguration().HTTP, GetLogger()); blockerError == nil {
+		return blockerError
+	} else if clientRDBMS, blockerError = client.NewRDBMSClient(ApplicationConfiguration().RDBMS, GetLogger()); blockerError == nil {
+		return blockerError
+	}
+
+	//initializeDependecies(appConfiguration)
 
 	LogDetails(constant.LogLevelInfo, constant.DependenciesLoaded, *globalConfiguration)
+
+	return nil
 }
 
-func Execute[T any](ginContext context.Context, request model.ClientHTTPRequest) model.ClientResponseDetails {
+func ExecuteHttpRequest[T any](ginContext context.Context, request model.ClientHTTPRequest) model.ClientResponseDetails {
 	return client.Execute[T](ginContext, clientHTTP, request)
+}
+
+func ExecuteRedbmsQuery[T any](ginContext context.Context, request model.RequestClientRDBMS) ([]T, error) {
+	return client.ExecuteQuery[T](ginContext, clientRDBMS, request)
 }
 
 func ApplicationConfiguration() *model.ApplicationConfiguration {
