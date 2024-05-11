@@ -9,7 +9,7 @@ type ApplicationConfiguration struct {
 	HttpPort      int               `mapstructure:"http_port"`
 	Log           LogConfig         `mapstructure:"log_config"`
 	HTTP          ClientHTTPConfig  `mapstructure:"http_config"`
-	RDBMS         ClientRDBMSConfig `mapstructure:"http_config"`
+	RDBMS         ClientRDBMSConfig `mapstructure:"rdbms_config"`
 	Config        ContextConfig     `mapstructure:"context_config"`
 }
 type ContextConfig struct {
@@ -43,15 +43,17 @@ type ClientHTTPConfig struct {
 }
 
 type ClientRDBMSConfig struct {
-	DSN                        string        // Data Source Name for database connection
-	MaxOpenConns               int           // Maximum number of open connections to the database
-	MaxIdleConns               int           // Maximum number of connections in the idle connection pool
-	ConnMaxLifetime            time.Duration // Maximum amount of time a connection may be reused
-	CircuitBreakerName         string        // Name of the circuit breaker for the database client
-	RequestTimeoutDuration     time.Duration // Request timeout duration for database operations
-	CircuitBreakerActiveTimeMs int           // Request timeout duration for database operations
-	MaxConcurrentRequests      int           // Maximum number of concurrent requests for the circuit breaker
-	ErrorThresholdPercentage   int           // Error percentage threshold to trip the circuit breaker
-	RequestVolumeThreshold     int           // Minimum number of requests to consider before tripping the circuit breaker
-	SleepWindow                time.Duration // Duration the circuit breaker stays open before allowing a single test request
+	DSN                        string        `mapstructure:"dsn"`                            // Data Source Name for database connection
+	MaxOpenConns               int           `mapstructure:"max_open_conns"`                 // Maximum number of open connections to the database
+	MaxIdleConns               int           `mapstructure:"max_idle_conns"`                 // Maximum number of connections in the idle connection pool
+	ConnMaxLifetime            time.Duration `mapstructure:"conn_max_lifetime_ms"`           // Maximum amount of time a connection may be reused (expressed in milliseconds)
+	CircuitBreakerName         string        `mapstructure:"circuit_breaker_name"`           // Name of the circuit breaker for the database client
+	RequestTimeoutDuration     time.Duration `mapstructure:"request_timeout_duration"`       // Request timeout duration for database operations (expressed in milliseconds)
+	CircuitBreakerActiveTimeMs int           `mapstructure:"circuit_breaker_active_time_ms"` // Time in milliseconds that the circuit breaker remains active
+	MaxConcurrentRequests      int           `mapstructure:"max_concurrent_requests"`        // Maximum number of concurrent requests for the circuit breaker
+	ErrorThresholdPercentage   int           `mapstructure:"error_threshold_percentage"`     // Error percentage threshold to trip the circuit breaker
+	RequestVolumeThreshold     int           `mapstructure:"request_volume_threshold"`       // Minimum number of requests to consider before tripping the circuit breaker
+	SleepWindow                time.Duration `mapstructure:"sleep_window_ms"`                // Duration the circuit breaker stays open before allowing a single test request (expressed in milliseconds)
+	RetryCountMax              int           `mapstructure:"retry_count_max"`                // Maximum number of retry attempts
+	RetryBackoffMs             time.Duration `mapstructure:"retry_backoff_ms"`               // Initial backoff interval for retries, expressed in milliseconds
 }

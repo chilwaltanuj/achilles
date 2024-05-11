@@ -21,7 +21,10 @@ func main() {
 		return
 	}
 
-	helper.BuildDependencies(configuration)
+	if err := helper.BuildDependencies(configuration); err != nil {
+		fmt.Print(constant.ServerStartFailure, err)
+		return
+	}
 	BuildServer(configuration)
 }
 

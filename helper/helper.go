@@ -23,9 +23,10 @@ func BuildDependencies(appConfiguration *model.ApplicationConfiguration) error {
 	globalConfiguration = appConfiguration
 	globalLogger = client.BuildAndGetLogger(appConfiguration.Log)
 
-	if clientHTTP, blockerError = client.NewHTTPClient(ApplicationConfiguration().HTTP, GetLogger()); blockerError == nil {
+	if clientHTTP, blockerError = client.NewHTTPClient(ApplicationConfiguration().HTTP, GetLogger()); blockerError != nil {
 		return blockerError
-	} else if clientRDBMS, blockerError = client.NewRDBMSClient(ApplicationConfiguration().RDBMS, GetLogger()); blockerError == nil {
+	}
+	if clientRDBMS, blockerError = client.NewRDBMSClient(ApplicationConfiguration().RDBMS, GetLogger()); blockerError != nil {
 		return blockerError
 	}
 
@@ -40,7 +41,7 @@ func ExecuteHttpRequest[T any](ginContext context.Context, request model.ClientH
 	return client.Execute[T](ginContext, clientHTTP, request)
 }
 
-func ExecuteRedbmsQuery[T any](ginContext context.Context, request model.RequestClientRDBMS) ([]T, error) {
+func ExecuteRdbmsQuery[T any](ginContext context.Context, request model.RequestClientRDBMS) ([]T, error) {
 	return client.ExecuteQuery[T](ginContext, clientRDBMS, request)
 }
 
