@@ -35,7 +35,7 @@ func NewRDBMSClient(config model.ClientRDBMSConfig, logger *logrus.Logger) (*mod
 		logger.Errorf("Attempt %d to connect to RDBMS failed: %v", attempt, err)
 		// Sleep before retrying to connect again, unless it's the last attempt.
 		if attempt < config.RetryCountMax+1 {
-			time.Sleep(config.RetryBackoffMs)
+			time.Sleep(config.RetryBackDuration)
 		}
 	}
 

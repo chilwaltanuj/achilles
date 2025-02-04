@@ -26,11 +26,11 @@ func BuildDependencies(appConfiguration *model.ApplicationConfiguration) error {
 	if clientHTTP, blockerError = client.NewHTTPClient(ApplicationConfiguration().HTTP, GetLogger()); blockerError != nil {
 		return blockerError
 	}
-	if clientRDBMS, blockerError = client.NewRDBMSClient(ApplicationConfiguration().RDBMS, GetLogger()); blockerError != nil {
-		return blockerError
-	}
+	// if clientRDBMS, blockerError = client.NewRDBMSClient(ApplicationConfiguration().RDBMS, GetLogger()); blockerError != nil {
+	// 	return blockerError
+	// }
 
-	//initializeDependecies(appConfiguration)
+	// initializeDependecies(appConfiguration)
 
 	LogDetails(constant.LogLevelInfo, constant.DependenciesLoaded, *globalConfiguration)
 

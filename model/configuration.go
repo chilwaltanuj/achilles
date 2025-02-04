@@ -30,6 +30,7 @@ type LogConfig struct {
 
 // ClientHTTPConfig represents the HTTP client configuration.
 type ClientHTTPConfig struct {
+	CircuitBreakerConfig
 	RequestTimeoutDuration     time.Duration `mapstructure:"request_timeout_ms"`
 	CircuitBreakerName         string        `mapstructure:"circuit_breaker_name"`
 	CircuitBreakerActiveTimeMs int           `mapstructure:"circuit_breaker_active_duration_ms"`
@@ -42,7 +43,19 @@ type ClientHTTPConfig struct {
 	RequestVolumeThreshold     int           `mapstructure:"request_volume_threshold"`
 }
 
+// [Open] : When the number of failures exceeds the ErrorThresholdPercentage within a specified
+// RequestVolumeThreshold, the circuit breaker transitions to the Open state.
+type CircuitBreakerConfig struct {
+	ErrorThresholdPercentage int           `mapstructure:"error_threshold_percentage"`
+	RequestVolumeThreshold   int           `mapstructure:"request_volume_threshold"`
+	CircuitBreakerName       string        `mapstructure:"circuit_breaker_name"`
+	RequestTimeoutDuration   time.Duration `mapstructure:"request_timeout_duration"`
+	MaxConcurrentRequests    int           `mapstructure:"max_concurrent_requests"`
+	SleepWindow              int           `mapstructure:"sleep_window_ms"` // Duration in milliseconds
+}
+
 type ClientRDBMSConfig struct {
+	CircuitBreakerConfig
 	DSN                        string        `mapstructure:"dsn"`                            // Data Source Name for database connection
 	MaxOpenConns               int           `mapstructure:"max_open_conns"`                 // Maximum number of open connections to the database
 	MaxIdleConns               int           `mapstructure:"max_idle_conns"`                 // Maximum number of connections in the idle connection pool
@@ -53,7 +66,6 @@ type ClientRDBMSConfig struct {
 	MaxConcurrentRequests      int           `mapstructure:"max_concurrent_requests"`        // Maximum number of concurrent requests for the circuit breaker
 	ErrorThresholdPercentage   int           `mapstructure:"error_threshold_percentage"`     // Error percentage threshold to trip the circuit breaker
 	RequestVolumeThreshold     int           `mapstructure:"request_volume_threshold"`       // Minimum number of requests to consider before tripping the circuit breaker
-	SleepWindow                time.Duration `mapstructure:"sleep_window_ms"`                // Duration the circuit breaker stays open before allowing a single test request (expressed in milliseconds)
 	RetryCountMax              int           `mapstructure:"retry_count_max"`                // Maximum number of retry attempts
-	RetryBackoffMs             time.Duration `mapstructure:"retry_backoff_ms"`               // Initial backoff interval for retries, expressed in milliseconds
+	RetryBackDuration          time.Duration `mapstructure:"retry_backoff_ms"`               // Initial backoff interval for retries, expressed in milliseconds
 }

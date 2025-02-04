@@ -10,7 +10,7 @@ import (
 )
 
 // PrepareAndFetchApplicationConfiguration loads the application configuration.
-// It first consults the oracle (config.default.json) and then seeks additional wisdom (environment-specific settings).
+// It first consults (config.default.json) and then seeks additional wisdom (environment-specific settings).
 func PrepareAndFetchApplicationConfiguration() (*model.ApplicationConfiguration, error) {
 	viper.SetConfigName("config.default")
 	viper.SetConfigType("json")

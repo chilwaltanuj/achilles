@@ -1,8 +1,8 @@
 {
   "deployment_environment":"default",
+  "http_port": 80,
   "application": "Achilles",
   "application_id": 1,
-  "http_port": 80,
   "log_config": {
     "log_level":"debug",
     "log_in_terminal_over_file": true,
@@ -15,7 +15,7 @@
   "http_config": {
     "request_timeout_ms": "2000ms",
     "circuit_breaker_name": "default",
-    "circuit_breaker_active_duration_ms": 5000,
+    "sleep_window_ms": 5000,
     "max_concurrent_requests": 10,
     "error_threshold_percentage": 50,
     "retry_count_max": 2,
@@ -28,7 +28,7 @@
     "dsn":"postgres://sample:cw4ZS64ZU49BJBaDwAMdg5E9c3An2yRW@dpg-coj21vf79t8c738pao90-a.singapore-postgres.render.com/sample_inb5",
     "request_timeout_ms": "2000ms",
     "circuit_breaker_name": "defaultDB",
-    "circuit_breaker_active_duration_ms": 5000,
+    "sleep_window_ms": 5000,
     "max_concurrent_requests": 10,
     "error_threshold_percentage": 50,
     "retry_count_max": 2,
