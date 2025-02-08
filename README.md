@@ -6,6 +6,18 @@ Achilles is a lean, Go (GoLang)-based web application boilerplate crafted to str
 
 Achilles follows a clear and streamlined naming structure specifically designed for the sake of clarity and minimalism. We acknowledge that the Go community values adherence to the standard Go packaging conventions, and Achilles intentionally deviates from these standards for a more intuitive and straightforward approach to structuring your code.
 
+## Table of Contents
+- [Introduction](#achilles-a-minimalist-go-web-application-boilerplate)
+- [Highlights](#highlights)
+- [Configuration Management](#configuration-management)
+- [Circuit Breaker Pattern](#circuit-breaker-pattern)
+- [Logging and Error Handling](#logging-and-error-handling)
+- [Getting Started](#getting-started)
+- [Adding a New Route](#adding-a-new-route-v1testsuccess-to-achilles)
+- [Using the Clients](#using-the-clients)
+- [License](#license)
+- [Acknowledgments](#acknowledgments)
+
 ## Highlights
 
 - **Intuitive Structuring**: If you appreciate clear and straightforward naming conventions, say goodbye to ambiguous structuring; Achilles might be your perfect choice.
