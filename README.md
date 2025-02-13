@@ -8,6 +8,8 @@ Achilles follows a clear and streamlined naming structure specifically designed 
 
 ## Table of Contents
 - [Introduction](#achilles-a-minimalist-go-web-application-boilerplate)
+- [Prerequisites](#prerequisites)
+- [Quick Start](#quick-start)
 - [Highlights](#highlights)
 - [Configuration Management](#configuration-management)
 - [Circuit Breaker Pattern](#circuit-breaker-pattern)
@@ -17,6 +19,34 @@ Achilles follows a clear and streamlined naming structure specifically designed 
 - [Using the Clients](#using-the-clients)
 - [License](#license)
 - [Acknowledgments](#acknowledgments)
+
+## Prerequisites
+
+Before sailing with Achilles, ensure you have:
+
+- Go 1.19 or higher
+- Git for version control
+- A text editor or IDE (VS Code recommended)
+- Basic understanding of HTTP services
+- PostgreSQL (if using RDBMS features)
+
+## Quick Start
+
+Get a basic Achilles server running in under 5 minutes:
+
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/achilles.git
+
+# Navigate to project
+cd achilles
+
+# Install dependencies
+go mod download
+
+# Run the server
+go run entrypoint/http/main.go
+```
 
 ## Highlights
 
