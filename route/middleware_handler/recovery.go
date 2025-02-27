@@ -3,11 +3,13 @@ package middlewareHandler
 import (
 	"fmt"
 	"net/http"
+	"strings"
 
 	"achilles/constant"
-	"achilles/helper"
 	"achilles/model"
 	routeHelper "achilles/route/helper"
+
+	"runtime/debug"
 
 	"github.com/gin-gonic/gin"
 )
@@ -27,17 +29,25 @@ func RecoveryMiddleware() gin.HandlerFunc {
 
 func handlePanic(ginContext *gin.Context) {
 	if r := recover(); r != nil {
+		stack := string(debug.Stack())
+		stackLines := strings.Split(stack, "\n")
+		// Skip the first 5 lines of the stack trace
+		trimmedStack := strings.Join(stackLines[5:], "\n")
 
 		responseData := model.HttpResponseData{
 			Success: false,
-			Status:  http.StatusOK,
+			Status:  http.StatusInternalServerError,
 			Message: constant.HttpServerErrorPanic,
 		}
 		routeHelper.BuildAndSetHttpResponseInContext(ginContext, responseData)
-		routeHelper.UpdateRequestMetaDataInContext(ginContext)
 
-		errorMessage := fmt.Sprintf("%+v", r)
-		helper.LogMessageWithStackTrace(errorMessage)
+		// Create structured error metadata and store it in the context
+		errorMetadata := &model.ErrorMetadata{
+			Error:      fmt.Sprintf("%+v", r),
+			Stacktrace: trimmedStack,
+		}
+		routeHelper.SeErrorMetadataInContext(ginContext, *errorMetadata)
+
 		RenderResponse(ginContext)
 	}
 }

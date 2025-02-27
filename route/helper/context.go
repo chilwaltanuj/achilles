@@ -39,6 +39,18 @@ func GetRequestMetadataFromContext(ginContext *gin.Context) *model.RequestMetaDa
 	}
 	return BuildAndSetRequestMetaInContext(ginContext)
 }
+func GetErrorMetadataFromContext(ginContext *gin.Context) *model.ErrorMetadata {
+	if errorMetadata, exists := ginContext.Get(constant.ContextErrorMetadata); exists {
+		if errMeta, ok := errorMetadata.(*model.ErrorMetadata); ok {
+			return errMeta
+		}
+	}
+	return nil
+}
+
+func SeErrorMetadataInContext(ginContext *gin.Context, response model.ErrorMetadata) {
+	ginContext.Set(constant.ContextErrorMetadata, response)
+}
 
 func BuildAndSetRequestMetaInContext(ctx *gin.Context) *model.RequestMetaData {
 	request := ctx.Request

@@ -13,9 +13,9 @@ const (
 
 	LogLevelPanic = "panic"
 	LogLevelFatal = "fatal"
+	LogLevelError = "error"
 	LogLevelWarn  = "warning"
 	LogLevelInfo  = "info"
 	LogLevelDebug = "debug"
 	LogLevelTrace = "trace"
-	LogLevelError = "error"
 )

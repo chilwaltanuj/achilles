@@ -3,6 +3,7 @@ package middlewareHandler
 import (
 	"achilles/constant"
 	"achilles/helper"
+	"net/http"
 
 	routeHelper "achilles/route/helper"
 
@@ -21,6 +22,10 @@ func RenderResponse(gincontext *gin.Context) {
 	default:
 		gincontext.JSON(response.Status, response)
 	}
-
-	helper.LogDetails(constant.LogLevelInfo, constant.RenderResponseMessage, response)
+	if response.Status == http.StatusInternalServerError {
+		logMetadata := routeHelper.GetErrorMetadataFromContext(gincontext)
+		helper.LogDetails(constant.LogLevelError, constant.HttpServerErrorPanic, logMetadata, response)
+	} else {
+		helper.LogDetails(constant.LogLevelInfo, constant.RenderResponseMessage, response)
+	}
 }
